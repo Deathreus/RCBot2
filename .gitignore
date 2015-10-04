@@ -59,6 +59,8 @@ dlldata.c
 *.pidb
 *.svclog
 *.scc
+*.sln
+*.sdf
 
 # Chutzpah Test files
 _Chutzpah*
@@ -229,3 +231,18 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Binaries
+*.exe
+*.dll
+*.so
+*.bat
+
+# SourceMod and MetaMod
+# =========================
+
+# SourceMod include directory
+sourcemod-master/
+
+# MetaMod include directory
+metamod-source-mmsource-1.10.6/
