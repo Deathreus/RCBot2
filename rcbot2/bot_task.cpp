@@ -2966,7 +2966,16 @@ void CBotTF2SnipeCrossBow::execute(CBot *pBot, CBotSchedule *pSchedule)
 				m_iHideWaypoint = pWaypoint->getPath(randomInt(0, pWaypoint->numPaths()));
 
 				if (m_iHideWaypoint != -1)
-					m_vHideOrigin = CWaypoints::getWaypoint(m_iHideWaypoint)->getOrigin();
+				{
+					CWaypoint *pHideWaypoint = CWaypoints::getWaypoint(m_iHideWaypoint);
+
+					if (pHideWaypoint != NULL)
+					{
+						m_vHideOrigin = pHideWaypoint->getOrigin();
+					}
+					else
+						m_iHideWaypoint = -1;
+				}
 			}
 		}
 
@@ -3240,13 +3249,27 @@ void CBotTF2Snipe :: execute (CBot *pBot,CBotSchedule *pSchedule)
 				}
 			}
 
-			if ( m_iHideWaypoint == -1 )
+			if (m_iHideWaypoint == -1)
 			{
 				// can't find a useful hide waypoint -- choose a random one
-				m_iHideWaypoint = pWaypoint->getPath(randomInt(0,pWaypoint->numPaths()));
+				int pathid = randomInt(0, pWaypoint->numPaths());
+				m_iHideWaypoint = pWaypoint->getPath(pathid);
 
-				if ( m_iHideWaypoint != -1 )
-					m_vHideOrigin = CWaypoints::getWaypoint(m_iHideWaypoint)->getOrigin();
+				if (m_iHideWaypoint != -1)
+				{
+					CWaypoint *pHideWaypoint = CWaypoints::getWaypoint(m_iHideWaypoint);
+
+					if (pHideWaypoint != NULL)
+					{
+						m_vHideOrigin = pHideWaypoint->getOrigin();
+					}
+					else
+					{
+						//detected a PATH problem
+						//pWaypoint->removePathTo(pathid);
+						m_iHideWaypoint = -1;
+					}
+				}
 			}
 		}
 		

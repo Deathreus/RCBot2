@@ -3273,7 +3273,8 @@ void CBots :: init ()
 			m_Bots[i] = new CBotCoop();
 			break;
 		case BOTTYPE_TF2:
-			m_Bots[i] = new CBotTF2();
+			m_Bots[i] = new CBotTF2();//MAX_PLAYERS];
+			//CBotGlobals::setEventVersion(2);
 			break;
 		case BOTTYPE_FF:
 			m_Bots[i] = new CBotFF();

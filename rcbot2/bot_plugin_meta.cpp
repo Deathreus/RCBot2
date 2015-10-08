@@ -463,7 +463,8 @@ bool RCBotPluginMeta::givePlayerLoadOut(edict_t *pPlayer, CTF2Loadout *pLoadout,
 	memset(&hScriptCreatedItem, 0, sizeof(CEconItemView));
 
 	hScriptCreatedItem.m_pVTable = pVTable;
-	hScriptCreatedItem.m_pVTable_Attributes = pVTable_Attributes;
+	hScriptCreatedItem.m_AttributeList.m_pVTable = pVTable_Attributes;
+	hScriptCreatedItem.m_NetworkedDynamicAttributesForDemos.m_pVTable = pVTable_Attributes;
 
 	const char *strWeaponClassname = pLoadout->m_pszClassname;
 	hScriptCreatedItem.m_iItemDefinitionIndex = pLoadout->m_iIndex;
@@ -471,7 +472,7 @@ bool RCBotPluginMeta::givePlayerLoadOut(edict_t *pPlayer, CTF2Loadout *pLoadout,
 	hScriptCreatedItem.m_iEntityQuality = pLoadout->m_iQuality;
 	CEconItemAttribute attribs[16];
 	int iSize = pLoadout->copyAttributesIntoArray(attribs, pVTable);
-	hScriptCreatedItem.m_Attributes.CopyArray(attribs, iSize);// pLoadout->m_Attributes, pLoadout->m_Attributes.size());
+	hScriptCreatedItem.m_AttributeList.m_Attributes.CopyArray(attribs, iSize);// pLoadout->m_Attributes, pLoadout->m_Attributes.size());
 	hScriptCreatedItem.m_bInitialized = true;
 	hScriptCreatedItem.m_bDoNotIterateStaticAttributes = true;
 	
@@ -723,6 +724,15 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	//Hook FireEvent to our function
 	SH_ADD_HOOK_MEMFUNC(IGameEventManager2, FireEvent, gameevents, this, &RCBotPluginMeta::FireGameEvent, false);
 
+
+#if SOURCE_ENGINE >= SE_ORANGEBOX
+	g_pCVar = icvar;
+	ConVar_Register(0, &s_BaseAccessor);
+#else
+	ConCommandBaseMgr::OneTimeInit(&s_BaseAccessor);
+#endif
+
+
 	// Read Signatures and Offsets
 
 	CBotGlobals::readRCBotFolder();
@@ -740,18 +750,11 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 
 	void *gameServerFactory = reinterpret_cast<void*>(ismm->GetServerFactory(false));
 
-	g_pGetEconItemSchema = new CGetEconItemSchema(pKVL, gameServerFactory);
-	g_pSetRuntimeAttributeValue = new CSetRuntimeAttributeValue(pKVL, gameServerFactory);
-	g_pGetAttributeDefinitionByName = new CGetAttributeDefinitionByName(pKVL, gameServerFactory);
-	g_pAttribList_GetAttributeByID = new CAttributeList_GetAttributeByID(pKVL, gameServerFactory);
-	g_pGameRules_Obj = new CGameRulesObject(pKVL, gameServerFactory);
-	g_pGameRules_Create_Obj = new CCreateGameRulesObject(pKVL, gameServerFactory);
-
 	int val;
 
 #ifdef _WIN32
 
-	if (pKVL->getInt("givenameditem_win", &val))
+	if (pKVL->getInt("givenameditem_win", &val))		
 		rcbot_givenameditem_offset.SetValue(val);
 	if (pKVL->getInt("equipwearable_win", &val))
 		rcbot_equipwearable_offset.SetValue(val);
@@ -789,25 +792,36 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 		rcbot_weaponequip_offset.SetValue(val);
 #endif
 
+	g_pGetEconItemSchema = new CGetEconItemSchema(pKVL, gameServerFactory);
+	g_pSetRuntimeAttributeValue = new CSetRuntimeAttributeValue(pKVL, gameServerFactory);
+	g_pGetAttributeDefinitionByName = new CGetAttributeDefinitionByName(pKVL, gameServerFactory);
+	g_pAttribList_GetAttributeByID = new CAttributeList_GetAttributeByID(pKVL, gameServerFactory);
+	g_pGameRules_Obj = new CGameRulesObject(pKVL, gameServerFactory);
+	g_pGameRules_Create_Obj = new CCreateGameRulesObject(pKVL, gameServerFactory);
+
 	delete pKVL;
 
 	if (fp)
 		fclose(fp);
 
-	SH_MANUALHOOK_RECONFIGURE(MHook_PlayerRunCmd,rcbot_runplayercmd_tf2.GetInt(),0,0);
-	SH_MANUALHOOK_RECONFIGURE(MHook_GiveNamedItem,rcbot_givenameditem_offset.GetInt(),0,0);
+	if (!CBotGlobals::gameStart())
+		return false;
+
+	CBotMod *pMod = CBotGlobals::getCurrentMod();
+
+	if (CBots::controlBots())
+	{
+		if (pMod->getModId() == MOD_TF2)
+			SH_MANUALHOOK_RECONFIGURE(MHook_PlayerRunCmd, rcbot_runplayercmd_tf2.GetInt(), 0, 0);
+		else if (pMod->getModId() == MOD_DOD)
+			SH_MANUALHOOK_RECONFIGURE(MHook_PlayerRunCmd, rcbot_runplayercmd_dods.GetInt(), 0, 0);
+	}
+	if (pMod->getModId() == MOD_TF2) 
+		SH_MANUALHOOK_RECONFIGURE(MHook_GiveNamedItem,rcbot_givenameditem_offset.GetInt(),0,0);
 
 	ENGINE_CALL(LogPrint)("All hooks started!\n");
 
-#if SOURCE_ENGINE >= SE_ORANGEBOX
-	g_pCVar = icvar;
-	ConVar_Register(0, &s_BaseAccessor);
-#else
-	ConCommandBaseMgr::OneTimeInit(&s_BaseAccessor);
-#endif
 
-	if ( !CBotGlobals::gameStart() )
-		return false;
 
 	//MathLib_Init( 2.2f, 2.2f, 0.0f, 2.0f );
 	//ConVar_Register( 0 );
@@ -1075,8 +1089,10 @@ void RCBotPluginMeta::Hook_ClientPutInServer(edict_t *pEntity, char const *playe
 
 	if ( pEnt )
 	{
-		SH_ADD_MANUALHOOK_MEMFUNC(MHook_PlayerRunCmd, pEnt, this, &RCBotPluginMeta::Hook_PlayerRunCmd, false);
-		SH_ADD_MANUALHOOK_MEMFUNC(MHook_GiveNamedItem, pEnt, this, &RCBotPluginMeta::Hook_GiveNamedItem, false);
+		if (CBots::controlBots())
+			SH_ADD_MANUALHOOK_MEMFUNC(MHook_PlayerRunCmd, pEnt, this, &RCBotPluginMeta::Hook_PlayerRunCmd, false);
+		if ( pMod->getModId() == MOD_TF2 )
+			SH_ADD_MANUALHOOK_MEMFUNC(MHook_GiveNamedItem, pEnt, this, &RCBotPluginMeta::Hook_GiveNamedItem, false);
 	}
 }
 
@@ -1086,8 +1102,12 @@ void RCBotPluginMeta::Hook_ClientDisconnect(edict_t *pEntity)
 
 	if ( pEnt )
 	{
-		SH_REMOVE_MANUALHOOK_MEMFUNC(MHook_PlayerRunCmd, pEnt, this, &RCBotPluginMeta::Hook_PlayerRunCmd, false); 
-		SH_REMOVE_MANUALHOOK_MEMFUNC(MHook_GiveNamedItem, pEnt, this, &RCBotPluginMeta::Hook_GiveNamedItem, false); 
+		CBotMod *pMod = CBotGlobals::getCurrentMod();
+
+		if (CBots::controlBots())
+			SH_REMOVE_MANUALHOOK_MEMFUNC(MHook_PlayerRunCmd, pEnt, this, &RCBotPluginMeta::Hook_PlayerRunCmd, false);
+		if (pMod->getModId() == MOD_TF2)		
+			SH_REMOVE_MANUALHOOK_MEMFUNC(MHook_GiveNamedItem, pEnt, this, &RCBotPluginMeta::Hook_GiveNamedItem, false); 
 	}
 
 	CClients::clientDisconnected(pEntity);

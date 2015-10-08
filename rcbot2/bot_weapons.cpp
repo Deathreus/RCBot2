@@ -87,9 +87,9 @@ const char *g_szHL2DMWeapons[] =
 
 WeaponsData_t DODWeaps[] =
 {
-
-	//slot, id , weapon name, flags, min dist, max dist, ammo index, preference
-	
+/*
+	slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+	*/
 	{1,DOD_WEAPON_AMERKNIFE, g_szDODWeapons[0],	WEAP_FL_PRIM_ATTACK|WEAP_FL_MELEE|WEAP_FL_UNDERWATER,0,100,-1,1,0},
 	{1,DOD_WEAPON_SPADE, g_szDODWeapons[1],		WEAP_FL_PRIM_ATTACK|WEAP_FL_MELEE|WEAP_FL_UNDERWATER,0,100,-1,1,0},
 	{2,DOD_WEAPON_COLT, g_szDODWeapons[2],		WEAP_FL_PRIM_ATTACK|WEAP_FL_UNDERWATER,0,800,1,2,0},
@@ -120,9 +120,9 @@ WeaponsData_t DODWeaps[] =
 
 WeaponsData_t HL2DMWeaps[] =
 {
-
-	//slot, id , weapon name, flags, min dist, max dist, ammo index, preference
-
+/*
+	slot, id , weapon name, flags, min dist, max dist, ammo index, preference
+*/
 	{2,HL2DM_WEAPON_PISTOL,		g_szHL2DMWeapons[0],	WEAP_FL_PRIM_ATTACK|WEAP_FL_UNDERWATER,0,1000,-1,1,0},
 	{1,HL2DM_WEAPON_CROWBAR,	g_szHL2DMWeapons[1],	WEAP_FL_PRIM_ATTACK|WEAP_FL_MELEE|WEAP_FL_UNDERWATER,0,128,-1,1,0},
 	{2,HL2DM_WEAPON_357,		g_szHL2DMWeapons[2],	WEAP_FL_PRIM_ATTACK,0,768,-1,2,0},
@@ -177,7 +177,7 @@ WeaponsData_t TF2Weaps[] =
 	//{TF2_SLOT_PDA, TF2_WEAPON_PDA_SPY, "tf_weapon_pda_spy", WEAP_FL_NONE, 0, 100, 0, 1, 0 },
 	{ TF2_SLOT_PRMRY, TF2_WEAPON_FRONTIERJUSTICE, "tf_weapon_sentry_revenge", WEAP_FL_KILLPIPEBOMBS | WEAP_FL_PRIM_ATTACK | WEAP_FL_UNDERWATER, 0, 800, 1, 2, 0 },
 	{TF2_SLOT_PDA, TF2_WEAPON_BUILDER, "tf_weapon_builder", WEAP_FL_NONE, 0, 100, 0, 1, 0 },
-	{TF2_SLOT_SCNDR,TF2_WEAPON_MEDIGUN,			"tf_weapon_medigun",	WEAP_FL_NONE,0,100,0,1,0},
+	{TF2_SLOT_SCNDR,TF2_WEAPON_MEDIGUN,			"tf_weapon_medigun",	WEAP_FL_HOLDATTACK,0,100,0,1,0},
 	{TF2_SLOT_PDA, TF2_WEAPON_INVIS, "tf_weapon_invis", WEAP_FL_NONE, 0, 100, 0, 1, 0 },
 	{TF2_SLOT_SCNDR,TF2_WEAPON_BUFF_ITEM,	"tf_weapon_buff_item",	WEAP_FL_NONE,0,100,0,1,0},
 	{ TF2_SLOT_SCNDR, TF2_WEAPON_FLAREGUN, "tf_weapon_flaregun", WEAP_FL_PRIM_ATTACK, 0, 1600, 2, 2, TF2_GRENADESPEED },

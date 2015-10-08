@@ -2746,7 +2746,7 @@ void CBotTF2 :: onInventoryApplication ()
 void CBotTF2 :: PostGiveNamedItem ( CEconItemView *cscript )
 {
 	m_pVTable = cscript->m_pVTable;
-	m_pVTable_Attributes = cscript->m_pVTable_Attributes;
+	m_pVTable_Attributes = cscript->m_AttributeList.m_pVTable;
 }
 /*
 void CBotTF2 :: addLoadoutWeapon ( CTF2Loadout *weap )

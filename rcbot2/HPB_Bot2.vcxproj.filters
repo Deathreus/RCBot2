@@ -32,6 +32,15 @@
     <ClCompile Include="bot_configfile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bot_coop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_css_bot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_dod_bot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="bot_events.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,6 +57,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bot_globals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_hl1dmsrc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_hldm_bot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bot_kv.cpp">
@@ -110,10 +125,19 @@
     <ClCompile Include="bot_wpt_dist.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bot_zombie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_squads.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="bot_tf2_points.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bot_tf2_mod.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot_dod_mod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bot_sigscan.cpp">
@@ -123,30 +147,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="bot_plugin_meta.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bot_css_bot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bot_dod_bot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bot_dod_mod.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bot_hl1dmsrc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bot_hldm_bot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bot_squads.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bot_zombie.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bot_coop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

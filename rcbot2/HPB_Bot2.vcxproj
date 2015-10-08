@@ -21,7 +21,7 @@
     <SccAuxPath>Svn</SccAuxPath>
     <SccLocalPath>Svn</SccLocalPath>
     <SccProvider>SubversionScc</SccProvider>
-    <ProjectName>rcbot2meta</ProjectName>
+    <ProjectName>RCBot2Meta</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_NonHomeFolder|Win32'" Label="Configuration">
@@ -38,7 +38,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -80,8 +80,9 @@
     <CustomBuildStep>
       <Command>copy $(TargetPath) "C:\Program Files (x86)\Steam\SteamApps\common\team fortress 2\tf\addons\rcbot2meta.dll"
 copy $(TargetPath) "C:\Program Files (x86)\Steam\SteamApps\common\Half-Life 2 Deathmatch\hl2mp\addons\rcbot2meta.dll"
+copy $(TargetPath) "C:\Program Files (x86)\Steam\SteamApps\common\Day of Defeat Source\dod\addons\rcbot2meta.dll"
 </Command>
-      <Outputs>C:\Program Files (x86)\Steam\SteamApps\common\team fortress 2\tf\addons\rcbot2meta.dll;C:\Program Files (x86)\Steam\SteamApps\common\Half-Life 2 Deathmatch\hl2mp\addons\rcbot2meta.dll;%(Outputs)</Outputs>
+      <Outputs>C:\Program Files (x86)\Steam\SteamApps\common\team fortress 2\tf\addons\rcbot2meta.dll;C:\Program Files (x86)\Steam\SteamApps\common\Half-Life 2 Deathmatch\hl2mp\addons\rcbot2meta.dll;C:\Program Files (x86)\Steam\SteamApps\common\Day of Defeat Source\dod\addons\rcbot2meta.dll;%(Outputs)</Outputs>
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -93,7 +94,7 @@ copy $(TargetPath) "C:\Program Files (x86)\Steam\SteamApps\common\Half-Life 2 De
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\public\mathlib;..\..\public;..\..\public\engine;..\..\public\tier0;..\..\public\tier1;..\..\dlls;..\..\game_shared;..\..\game\shared;..\..\game\server;..\..\public\game\server;..\..\metamod-source-mmsource-1.10.6\core\;..\..\metamod-source-mmsource-1.10.6\core\sourcehook\;..\..\metamod-source-mmsource-1.10.6\public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\public\mathlib;..\..\public;..\..\public\engine;..\..\public\tier0;..\..\public\tier1;..\..\dlls;..\..\game_shared;..\..\game\shared;..\..\game\server;..\..\public\game\server;..\metamod-source-mmsource-1.10.4\core\;..\metamod-source-mmsource-1.10.4\core\sourcehook\;..\metamod-source-mmsource-1.10.4\public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SOURCE_ENGINE=4;WIN32;_DEBUG;_WINDOWS;HOMEFOLDER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -103,7 +104,7 @@ copy $(TargetPath) "C:\Program Files (x86)\Steam\SteamApps\common\Half-Life 2 De
       <ObjectFileName>.\Debug/</ObjectFileName>
       <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
       <BrowseInformation>true</BrowseInformation>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
@@ -176,7 +177,7 @@ copy "$(ProjectDir)\update.txt" "C:\Program Files (x86)\Steam\steamapps\paul.mur
       <ObjectFileName>.\Release/</ObjectFileName>
       <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
@@ -310,10 +311,10 @@ copy "$(ProjectDir)\update.txt" "C:\Program Files (x86)\Steam\steamapps\paul.mur
     <ClCompile Include="bot_waypoint_visibility.cpp" />
     <ClCompile Include="bot_weapons.cpp" />
     <ClCompile Include="bot_wpt_dist.cpp" />
+    <ClCompile Include="bot_zombie.cpp" />
     <ClCompile Include="bot_sigscan.cpp" />
     <ClCompile Include="bot_cvars.cpp" />
     <ClCompile Include="bot_plugin_meta.cpp" />
-    <ClCompile Include="bot_zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bot.h" />

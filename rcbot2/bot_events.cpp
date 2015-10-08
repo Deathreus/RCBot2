@@ -38,10 +38,10 @@
 #include "bot_strings.h"
 #include "bot_globals.h"
 #include "bot_fortress.h"
-//#include "bot_dod_bot.h"
+#include "bot_dod_bot.h"
 #include "bot_weapons.h"
 #include "bot_getprop.h"
-//#include "bot_dod_bot.h"
+#include "bot_dod_bot.h"
 #include "bot_squads.h"
 #include "bot_schedule.h"
 #include "bot_waypoint_locations.h"
@@ -1030,7 +1030,7 @@ void CFlagCaptured :: execute ( IBotEventInterface *pEvent )
 
 }
 /////////////////////////////////////////////////
-/*void CDODPointCaptured :: execute ( IBotEventInterface *pEvent )
+void CDODPointCaptured :: execute ( IBotEventInterface *pEvent )
 {
 	int cp = pEvent->getInt("cp");
 	const char *szCappers = pEvent->getString("cappers",NULL);
@@ -1107,7 +1107,7 @@ void CDODBombPlanted :: execute ( IBotEventInterface *pEvent )
 			((CDODBot*)pBot)->removeBomb();
 		}
 	}*/
-/*
+
 	CBots::botFunction(&func);
 
 	CDODMod::m_Flags.setBombPlanted(cp,true);
@@ -1147,7 +1147,7 @@ void CDODChangeClass :: execute ( IBotEventInterface *pEvent )
 			pDODBot->selectedClass(pEvent->getInt("class"));
 		}
 	}
-}*/
+}
 
 /*
 [RCBot] [DEBUG GAME_EVENT] [BEGIN "dod_stats_weapon_attack"]
@@ -1155,7 +1155,7 @@ void CDODChangeClass :: execute ( IBotEventInterface *pEvent )
 [RCBot] [DEBUG GAME_EVENT] 	weapon = 14
 [RCBot] [DEBUG GAME_EVENT] [END "dod_stats_weapon_attack"]*/
 
-/*void CDODFireWeaponEvent :: execute ( IBotEventInterface *pEvent )
+void CDODFireWeaponEvent :: execute ( IBotEventInterface *pEvent )
 {
 	int iAttacker = pEvent->getInt("attacker",-1);
 
@@ -1171,7 +1171,7 @@ void CDODChangeClass :: execute ( IBotEventInterface *pEvent )
 	}
 
 
-}*/
+}
 
 ///////////////////////////////////////////////////////
 
@@ -1205,6 +1205,7 @@ void CBotEvents :: setupEvents ()
 	addEvent(new CBulletImpactEvent());
 	addEvent(new CFlagEvent());
 	addEvent(new CPlayerSpawnEvent());
+	////////////// tf2
 	addEvent(new CTF2BuiltObjectEvent());
 	addEvent(new CTF2ChangeClass());
 	addEvent(new CTF2RoundStart());
@@ -1219,11 +1220,28 @@ void CBotEvents :: setupEvents ()
 	addEvent(new COverTimeBegin());
 	addEvent(new CPlayerHealed());
 	addEvent(new CPlayerTeleported());
+	addEvent(new CDODChangeClass());
+	addEvent(new CDODBombPlanted());
+	addEvent(new CDODBombExploded());
+	addEvent(new CDODBombDefused());
+	addEvent(new CDODPointCaptured());
+	addEvent(new CDODFireWeaponEvent());
 	addEvent(new CTF2RoundWinEvent());
 	addEvent(new CTF2PointUnlocked());
 	addEvent(new CTF2PointLocked());
 	addEvent(new CTF2MannVsMachineAlarm());
 	addEvent(new CPostInventoryApplicationTF2());
+/*
+pumpkin_lord_summoned 
+merasmus_summoned 
+eyeball_boss_summoned 
+
+pumpkin_lord_killed 
+merasmus_killed 
+merasmus_escaped 
+eyeball_boss_killed 
+eyeball_boss_escaped */
+
 	addEvent(new CBossSummonedEvent("pumpkin_lord_summoned"));
 	addEvent(new CBossSummonedEvent("merasmus_summoned"));
 	addEvent(new CBossSummonedEvent("eyeball_boss_summoned"));
@@ -1233,18 +1251,12 @@ void CBotEvents :: setupEvents ()
 	addEvent(new CBossKilledEvent("eyeball_boss_killed"));
 	addEvent(new CBossKilledEvent("eyeball_boss_escaped"));
 	addEvent(new CTF2RoundActive());
-	addEvent(new CTF2PointStartTouch());
-	addEvent(new CTF2PointEndTouch());
-	/*addEvent(new CDODChangeClass());
-	addEvent(new CDODBombPlanted());
-	addEvent(new CDODBombExploded());
-	addEvent(new CDODBombDefused());
-	addEvent(new CDODPointCaptured());
-	addEvent(new CDODFireWeaponEvent());
 	addEvent(new CDODRoundStart());
 	addEvent(new CDODRoundActive());
 	addEvent(new CDODRoundWin());
-	addEvent(new CDODRoundOver());*/
+	addEvent(new CDODRoundOver());
+	addEvent(new CTF2PointStartTouch());
+	addEvent(new CTF2PointEndTouch());
 }
 
 void CBotEvents :: addEvent ( CBotEvent *pEvent )

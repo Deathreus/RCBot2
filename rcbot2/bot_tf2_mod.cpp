@@ -141,14 +141,14 @@ CTF2Loadout :: CTF2Loadout ( const char *pszClassname, int iIndex, int iQuality,
 void CSCICopy(CEconItemView *olditem, CEconItemView *newitem)
 {
 	memset(newitem, 0, sizeof(CEconItemView));
-	
+
 	//#define copymember(a) newitem->a = olditem->a
-	#define copymember(a) memcpy(&newitem->a, &olditem->a, sizeof(newitem->a));
+#define copymember(a) memcpy(&newitem->a, &olditem->a, sizeof(newitem->a));
 
 	copymember(m_pVTable);
 
 	copymember(m_iItemDefinitionIndex);
-	
+
 	copymember(m_iEntityQuality);
 	copymember(m_iEntityLevel);
 
@@ -158,16 +158,31 @@ void CSCICopy(CEconItemView *olditem, CEconItemView *newitem)
 	copymember(m_iAccountID);
 	copymember(m_iInventoryPosition);
 
-	copymember(m_pAlternateItemData);
+	copymember(m_ItemHandle);
+
+	copymember(m_bColorInit);
+	copymember(m_unHalloweenRGB);
+	copymember(m_unHalloweenAltRGB);
+	copymember(m_unRGB);
+	copymember(m_unAltRGB);
+
+	copymember(m_pWeaponSkinBase);
+	copymember(m_pWeaponSkinBaseCompositor);
+
+	copymember(m_Unk1);
+	copymember(m_Unk2);
+	copymember(m_Unk3);
+
+	copymember(m_iTeamNumber);
+
 	copymember(m_bInitialized);
 
-	copymember(m_pVTable_Attributes);
-	copymember(m_pAttributeManager);
-	
+	// copy ctor so the CUtlVector is copied correctly
+	newitem->m_AttributeList = olditem->m_AttributeList;
+	newitem->m_NetworkedDynamicAttributesForDemos = olditem->m_NetworkedDynamicAttributesForDemos;
+
 	copymember(m_bDoNotIterateStaticAttributes);
 
-	newitem->m_Attributes = olditem->m_Attributes;
-	
 	/*
 	META_CONPRINTF("Copying attributes...\n");
 	int nCount = olditem->m_Attributes.Count();
@@ -175,8 +190,8 @@ void CSCICopy(CEconItemView *olditem, CEconItemView *newitem)
 	newitem->m_Attributes.SetSize( nCount );
 	for ( int i = 0; i < nCount; i++ )
 	{
-		META_CONPRINTF("Copying %d...\n", i+1);
-		newitem->m_Attributes[ i ] = olditem->m_Attributes[ i ];
+	META_CONPRINTF("Copying %d...\n", i+1);
+	newitem->m_Attributes[ i ] = olditem->m_Attributes[ i ];
 	}
 	*/
 }
@@ -1408,48 +1423,51 @@ bool CTeamFortress2Mod::buildingNearby ( int iTeam, Vector vOrigin )
 {
 	edict_t *pPlayer;
 	short int i;
+	short int sentryIndex;
 
-		for ( i = 1; i <= gpGlobals->maxClients; i ++ )
+	for ( i = 1; i <= gpGlobals->maxClients; i ++ )
+	{
+		pPlayer = INDEXENT(i);
+
+		// crash bug fix 
+		if ( !pPlayer || pPlayer->IsFree() )
+			continue;
+
+		sentryIndex = i - 1;
+
+		if ( CClassInterface::getTF2Class(pPlayer) != TF_CLASS_ENGINEER )
+			continue;
+
+		if ( CClassInterface::getTeam(pPlayer) != iTeam )
+			continue;
+
+		if (m_SentryGuns[sentryIndex].sentry.get())
 		{
-			pPlayer = INDEXENT(i);
-
-			// crash bug fix 
-			if ( !pPlayer || pPlayer->IsFree() )
-				continue;
-
-			if ( CClassInterface::getTF2Class(pPlayer) != TF_CLASS_ENGINEER )
-				continue;
-
-			if ( CClassInterface::getTeam(pPlayer) != iTeam )
-				continue;
-
-			if ( m_SentryGuns[i].sentry.get() )
-			{
-				if ( (vOrigin-CBotGlobals::entityOrigin(m_SentryGuns[i].sentry.get())).Length() < 100 )
-					return true;
-			}
-
-			if ( m_Dispensers[i].disp.get() )
-			{
-				if ( (vOrigin-CBotGlobals::entityOrigin(m_Dispensers[i].disp.get())).Length() < 100 )
-					return true;
-			}
-
-			if ( m_Teleporters[i].entrance.get() )
-			{
-				if ( (vOrigin-CBotGlobals::entityOrigin(m_Teleporters[i].entrance.get())).Length() < 100 )
-					return true;
-			}
-
-			if ( m_Teleporters[i].exit.get() )
-			{
-				if ( (vOrigin-CBotGlobals::entityOrigin(m_Teleporters[i].exit.get())).Length() < 100 )
-					return true;
-			}
-
+			if ((vOrigin - CBotGlobals::entityOrigin(m_SentryGuns[sentryIndex].sentry.get())).Length() < 100)
+				return true;
 		}
 
-		return false;
+		if (m_Dispensers[sentryIndex].disp.get())
+		{
+			if ((vOrigin - CBotGlobals::entityOrigin(m_Dispensers[sentryIndex].disp.get())).Length() < 100)
+				return true;
+		}
+
+		if (m_Teleporters[sentryIndex].entrance.get())
+		{
+			if ( (vOrigin-CBotGlobals::entityOrigin(m_Teleporters[sentryIndex].entrance.get())).Length() < 100 )
+				return true;
+		}
+
+		if (m_Teleporters[sentryIndex].exit.get())
+		{
+			if ( (vOrigin-CBotGlobals::entityOrigin(m_Teleporters[sentryIndex].exit.get())).Length() < 100 )
+				return true;
+		}
+
+	}
+
+	return false;
 }
 
 //get the building
@@ -1908,9 +1926,9 @@ void  CTF2Loadout :: applyAttributes  ( CEconItemView *cscript )
 {
 	for ( unsigned int i = 0; i < m_Attributes.size(); i ++ )
 	{
-		m_Attributes[i]->m_pVTable = cscript->m_pVTable_Attributes;
+		m_Attributes[i]->m_pVTable = cscript->m_AttributeList.m_pVTable;
 
-		cscript->m_Attributes.AddToHead((*m_Attributes[i]));
+		cscript->m_AttributeList.m_Attributes.AddToHead((*m_Attributes[i]));
 	}
 }
 
