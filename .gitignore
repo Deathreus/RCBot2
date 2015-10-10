@@ -237,18 +237,3 @@ $RECYCLE.BIN/
 *.dll
 *.so
 *.bat
-
-# SourceMod and MetaMod
-# =========================
-
-# SourceMod include directory
-sourcemod-master/
-
-# MetaMod include directory
-metamod-source-mmsource-1.10.6/
-
-# SDK
-# =========================
-
-# HL2SDK
-hl2sdk-tf2/

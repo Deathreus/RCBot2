@@ -94,7 +94,7 @@ copy $(TargetPath) "C:\Program Files (x86)\Steam\SteamApps\common\Day of Defeat 
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\public\mathlib;..\..\public;..\..\public\engine;..\..\public\tier0;..\..\public\tier1;..\..\dlls;..\..\game_shared;..\..\game\shared;..\..\game\server;..\..\public\game\server;..\metamod-source-mmsource-1.10.4\core\;..\metamod-source-mmsource-1.10.4\core\sourcehook\;..\metamod-source-mmsource-1.10.4\public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(HL2SDKOBVALVE)\public\mathlib;$(HL2SDKOBVALVE)\public;$(HL2SDKOBVALVE)\public\engine;$(HL2SDKOBVALVE)\public\tier0;$(HL2SDKOBVALVE)\public\tier1;..\dlls;..\game_shared;$(HL2SDKOBVALVE)\game\shared;$(HL2SDKOBVALVE)\game\server;$(HL2SDKOBVALVE)\public\game\server;$(MMSOURCE19)\core\;$(MMSOURCE19)\core\sourcehook\;$(MMSOURCE19)\public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SOURCE_ENGINE=4;WIN32;_DEBUG;_WINDOWS;HOMEFOLDER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -165,7 +165,7 @@ copy "$(ProjectDir)\update.txt" "C:\Program Files (x86)\Steam\steamapps\paul.mur
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\..\public\mathlib;..\..\public;..\..\public\engine;..\..\public\tier0;..\..\public\tier1;..\..\dlls;..\..\game_shared;..\..\game\shared;..\..\game\server;..\..\public\game\server;..\metamod-source-mmsource-1.10.4\core\;..\metamod-source-mmsource-1.10.4\core\sourcehook\;..\metamod-source-mmsource-1.10.4\public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(HL2SDKOBVALVE)\public\mathlib;$(HL2SDKOBVALVE)\public;$(HL2SDKOBVALVE)\public\engine;$(HL2SDKOBVALVE)\public\tier0;$(HL2SDKOBVALVE)\public\tier1;..\dlls;..\game_shared;$(HL2SDKOBVALVE)\game\shared;$(HL2SDKOBVALVE)\game\server;$(HL2SDKOBVALVE)\public\game\server;$(MMSOURCE19)\core\;$(MMSOURCE19)\core\sourcehook\;$(MMSOURCE19)\public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SOURCE_ENGINE=4;WIN32;NDEBUG;_WINDOWS;HOMEFOLDER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -232,7 +232,7 @@ copy "$(ProjectDir)\update.txt" "C:\Program Files (x86)\Steam\steamapps\paul.mur
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\..\public\mathlib;..\..\public;..\..\public\engine;..\..\public\tier0;..\..\public\tier1;..\..\dlls;..\..\game_shared;..\..\game\shared;..\..\game\server;..\..\public\game\server;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(HL2SDKOBVALVE)\public\mathlib;$(HL2SDKOBVALVE)\public;$(HL2SDKOBVALVE)\public\engine;$(HL2SDKOBVALVE)\public\tier0;$(HL2SDKOBVALVE)\public\tier1;..\dlls;..\game_shared;$(HL2SDKOBVALVE)\game\shared;$(HL2SDKOBVALVE)\game\server;$(HL2SDKOBVALVE)\public\game\server;$(MMSOURCE19)\core\;$(MMSOURCE19)\core\sourcehook\;$(MMSOURCE19)\public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
