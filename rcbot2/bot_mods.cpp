@@ -109,7 +109,7 @@ void CBotMods :: parseFile ()
 
 		j = 0;
 
-		while ( (i < len) && (buffer[i] != '\n') && (buffer[i] != '\r') )
+		while ( i < len )
 		{
 			if ( j || (buffer[i] != ' ') )
 				val[j++] = buffer[i];

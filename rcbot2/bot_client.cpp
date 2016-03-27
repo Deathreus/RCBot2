@@ -1158,7 +1158,7 @@ void CClients::clientDebugMsg(CBot *pBot, int iLev, const char *fmt, ... )
 	clientDebugMsg(iLev,string,pBot);
 }
 
-const char *g_szDebugTags[15] =
+const char *g_szDebugTags[14] =
 {
 "GAME_EVENT",
 "NAV",
@@ -1173,8 +1173,7 @@ const char *g_szDebugTags[15] =
 "THINK",
 "LOOK",
 "HUD",
-"AIM",
-"CHAT"
+"AIM"
 };
 
 
@@ -1189,15 +1188,9 @@ void CClients :: clientDebugMsg ( int iLev, const char *szMsg, CBot *pBot )
 		if ( !pClient->isUsed() )
 			continue;
 		if ( !pClient->isDebugOn(iLev) )
-			continue;
+			continue;		
 		if ( pBot && !pClient->isDebuggingBot(pBot->getEdict()) )
 			continue;
-
-		if (pClient->isDebugOn(BOT_DEBUG_CHAT)) {
-			char logmsg[128] = {0};
-			snprintf(logmsg, sizeof(logmsg),"[DEBUG %s] %s",g_szDebugTags[iLev],szMsg);
-			RCBotPluginMeta::HudTextMessage(pClient->getPlayer(), logmsg);
-		}
 
 		CBotGlobals::botMessage(pClient->getPlayer(),0,"[DEBUG %s] %s",g_szDebugTags[iLev],szMsg);
 	}

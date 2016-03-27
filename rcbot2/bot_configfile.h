@@ -76,8 +76,6 @@ public:
 	}
 
 	static void doNextCommand ();
-	static void executeCommands ();
-
 private:
 	static vector <char *> m_Commands;
 	static unsigned int m_iCmd; // current command (time delayed)

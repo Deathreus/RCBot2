@@ -9,8 +9,8 @@ static ICvar *s_pCVar;
 
 ConVar rcbot_tf2_debug_spies_cloakdisguise("rcbot_tf2_debug_spies_cloakdisguise","1",0,"Debug command : allow spy bots to cloak and disguise");
 ConVar rcbot_tf2_medic_letgotime("rcbot_tf2_medic_letgotime","0.4",0,"Time for medic to let go of medigun to switch players");
-ConVar rcbot_const_round_offset("rcbot_const_round_offset","844",0,"TF2 OFFSET for Round Class");
-ConVar rcbot_const_point_master_offset("rcbot_const_mstr_offset","844",0,"TF2 OFFSET for Point Master Class");
+ConVar rcbot_const_round_offset("rcbot_const_round_offset","852",0,"TF2 OFFSET for Round Class");
+
 //ConVar rcbot_const_point_offset("rcbot_const_pnt_offset","1140",0,"TF2 OFFSET for Point Class");
 //ConVar rcbot_const_point_data_offset("rcbot_const_pnt_data_offset","1642",0,"TF2 OFFSET for Point Class data");
 ConVar rcbot_tf2_pyro_airblast("rcbot_tf2_pyro_airblast_ammo","50",0,"Ammo must be above this to airblast -- if 200 airblast will be disabled");
@@ -76,8 +76,7 @@ ConVar rcbot_speed_boost("rcbot_speed_boost","1",0,"multiplier for bots speed");
 ConVar rcbot_melee_only("rcbot_melee_only","0",0,"if 1 bots will only use melee weapons");
 ConVar rcbot_debug_iglev("rcbot_debug_iglev","0",0,"bot think ignores functions to test cpu speed");
 ConVar rcbot_dont_move("rcbot_dontmove","0",0,"if 1 , bots will all move forward");
-ConVar rcbot_runplayercmd_dods("rcbot_runplayer_cmd_dods","417",0,"offset of the DOD:S PlayerRunCommand function");
-ConVar rcbot_runplayercmd_tf2("rcbot_runplayer_cmd_tf2","418",0,"offset of the TF2 PlayerRunCommand function");
+
 ConVar rcbot_runplayercmd_hookonce("rcbot_runplayer_hookonce","1",0,"function will hook only once, if 0 it will unook and rehook after every map");
 ConVar rcbot_ladder_offs("rcbot_ladder_offs","42",0,"difference in height for bot to think it has touched the ladder waypoint");
 ConVar rcbot_ffa("rcbot_ffa","0",0,"Free for all mode -- bots shoot everyone");
@@ -101,20 +100,33 @@ ConVar rcbot_spy_runaway_health("rcbot_spy_runaway_health","70",0,"health which 
 ConVar rcbot_supermode("rcbot_supermode","0",0,"If 1 will make every bot skill and reaction much higher");
 ConVar rcbot_addbottime("rcbot_addbottime","0.83",0,"The time in seconds for bots to be added after another");
 ConVar rcbot_customloadouts("rcbot_customloadouts","0",0,"if 1 bots can use custom weapons");
-ConVar rcbot_givenameditem_offset("rcbot_givenameditem_offset","471",0,"offset of the GiveNamedItem function");
-ConVar rcbot_equipwearable_offset("rcbot_equipwearable_offset","426",0,"offset of the EquipWearable function");
-ConVar rcbot_rmplayeritem_offset("rcbot_rmplayeritem_offset","270",0,"offset of the RemovePlayerItem function");
-ConVar rcbot_enable_attributes("rcbot_enable_attributes","1",0,"Enable/disable attributes on TF2 weapon loadouts");
+ConVar rcbot_enable_attributes("rcbot_enable_attributes", "1", 0, "Enable/disable attributes on TF2 weapon loadouts");
+
 ConVar rcbot_force_generation("rcbot_force_generation","0",0,"force generation of weapons");
 ConVar rcbot_equiphats("rcbot_equiphats", "0", 0, "Allow bots to quip a random hat (unstable)");
-ConVar rcbot_getweaponslot_offset("rcbot_getweaponslot_offset", "268", 0, "offset of the getweaponslot function");
-ConVar rcbot_removewearable_offset("rcbot_removewearable_offset", "427", 0, "offset of the removewearable function");
-ConVar rcbot_weaponequip_offset("rcbot_weaponequip_offset", "261", 0, "offset for weapon equip function");
-ConVar rcbot_gamerules_offset("rcbot_gamerules_offset", "5", 0, "offset for gamerules object");
-ConVar rcbot_weaponswitch_offset("rcbot_weaponswitch_offset", "264", 0, "offset for weapon Switch function");
-ConVar rcbot_bot_quota_interval("rcbot_bot_quota_interval", "-1", 0, "Interval between bot quota checks");
+
 //ConVar rcbot_bot_add_cmd("rcbot_bot_add_cmd","bot",0,"command to add puppet bots");
 //ConVar rcbot_bot_add_cmd("rcbot_hook_engine","1",0,"command to add puppet bots");
+
+// OFFSETS
+ConVar rcbot_gamerules_offset("rcbot_gamerules_offset", "5", 0, "offset for gamerules object");
+
+// ENTIY SIZE OFFSET
+ConVar rcbot_const_point_master_offset("rcbot_const_mstr_offset", "852", 0, "TF2 OFFSET for Point Master Class");
+
+// CBASEENTITY OFFSETS
+ConVar rcbot_weaponequip_offset("rcbot_weaponequip_offset",			"262", 0, "offset for weapon equip function");
+ConVar rcbot_weaponswitch_offset("rcbot_weaponswitch_offset",		"265", 0, "offset for weapon Switch function");
+ConVar rcbot_getweaponslot_offset("rcbot_getweaponslot_offset",		"269", 0, "offset of the getweaponslot function");
+ConVar rcbot_rmplayeritem_offset("rcbot_rmplayeritem_offset",		"271", 0, "offset of the RemovePlayerItem function");
+ConVar rcbot_runplayercmd_dods("rcbot_runplayer_cmd_dods",			"418", 0, "offset of the DOD:S PlayerRunCommand function");
+ConVar rcbot_runplayercmd_tf2("rcbot_runplayer_cmd_tf2",			"419", 0, "offset of the TF2 PlayerRunCommand function");
+ConVar rcbot_equipwearable_offset("rcbot_equipwearable_offset",		"427", 0, "offset of the EquipWearable function");
+ConVar rcbot_removewearable_offset("rcbot_removewearable_offset",	"428", 0, "offset of the removewearable function");
+
+ConVar rcbot_givenameditem_offset("rcbot_givenameditem_offset",		"472", 0, "offset of the GiveNamedItem function");
+
+
 ConVar *sv_gravity = NULL;
 ConVar *sv_cheats = NULL;//("sv_cheats");
 ConVar *mp_teamplay = NULL;

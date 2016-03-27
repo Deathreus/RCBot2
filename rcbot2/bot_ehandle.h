@@ -81,8 +81,6 @@ public:
 			if ( !m_pEnt->IsFree() && (m_iSerialNumber == m_pEnt->m_NetworkSerialNumber) )
 				return m_pEnt;
 		}
-		else if ( m_pEnt )
-			m_pEnt = NULL;
 
 		return NULL;
 	}

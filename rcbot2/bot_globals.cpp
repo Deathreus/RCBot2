@@ -49,7 +49,6 @@
 
 #ifndef __linux__
 #include <direct.h> // for mkdir
-#include <sys/stat.h>
 #else
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -165,60 +164,24 @@ int CBotGlobals ::numPlayersOnTeam(int iTeam, bool bAliveOnly)
 	return num;
 }
 
-bool CBotGlobals::dirExists(const char *path)
-{
-#ifdef _WIN32
-
-	struct _stat info;
-
-	if (_stat(path, &info) != 0)
-		return false;
-	else if (info.st_mode & _S_IFDIR)
-		return true;
-	else
-		return false;
-
-#else
-
-	struct stat info;
-
-	if (stat(path, &info) != 0)
-		return false;
-	else if (info.st_mode & S_IFDIR)
-		return true;
-	else
-		return false;
-
-#endif
-}
-
 void CBotGlobals::readRCBotFolder()
 {
 	KeyValues *mainkv = new KeyValues("Metamod Plugin");
 
-	if (mainkv->LoadFromFile(filesystem, "addons/metamod/rcbot2.vdf", "MOD")) {
-		char folder[256] = "\0";
+	// Find the RCBOT2 Path from metamod VDF
+	CBotGlobals::botMessage(NULL, 0, "Reading rcbot2 path from VDF...");
+
+	if (mainkv->LoadFromFile(filesystem, "addons/metamod/rcbot2.vdf", "MOD"))
+	{
 		const char *szRCBotFolder = mainkv->GetString("rcbot2path");
 
-		if (szRCBotFolder && *szRCBotFolder) {
-			CBotGlobals::botMessage(NULL, 0, "RCBot Folder -> trying %s", szRCBotFolder);
-
-			if (!dirExists(szRCBotFolder)) {
-				snprintf(folder, sizeof(folder), "%s/%s", CBotGlobals::modFolder(), szRCBotFolder);
-
-				szRCBotFolder = CStrings::getString(folder);
-				CBotGlobals::botMessage(NULL, 0, "RCBot Folder -> trying %s", szRCBotFolder);
-
-				if (!dirExists(szRCBotFolder)) {
-					CBotGlobals::botMessage(NULL, 0, "RCBot Folder -> not found ...");
-				}
-			}
-
+		if (szRCBotFolder && *szRCBotFolder)
+		{
 			m_szRCBotFolder = CStrings::getString(szRCBotFolder);
 		}
-	}
 
-	mainkv->deleteThis();
+		mainkv->deleteThis();
+	}
 }
 
 float CBotGlobals :: grenadeWillLand ( Vector vOrigin, Vector vEnemy, float fProjSpeed, float fGrenadePrimeTime, float *fAngle )
@@ -493,22 +456,6 @@ bool CBotGlobals :: traceVisible (edict_t *pEnt)
 void CBotGlobals :: freeMemory ()
 {
 	m_pCommands->freeMemory();
-}
-
-bool CBotGlobals::initModFolder() {
-	char szGameFolder[512];
-	engine->GetGameDir(szGameFolder, 512);
-
-	int iLength = strlen(CStrings::getString(szGameFolder));
-	int pos = iLength - 1;
-
-	while ((pos > 0) && (szGameFolder[pos] != '\\') && (szGameFolder[pos] != '/')) {
-		pos--;
-	}
-	pos++;
-
-	m_szModFolder = CStrings::getString(&szGameFolder[pos]);
-	return true;
 }
 
 bool CBotGlobals :: gameStart ()
@@ -972,15 +919,10 @@ bool CBotGlobals :: makeFolders ( char *szFile )
 #ifndef __linux__
         mkdir(szFolderName);
 #else
-		if ( mkdir(szFolderName, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0 ) {
-			botMessage(NULL,0,"Trying to create folder '%s' successful",szFolderName);
-		} else {
-			if (dirExists(szFolderName)) {
-				botMessage(NULL,0,"Folder '%s' already exists", szFolderName);
-			} else {
-				botMessage(NULL,0,"Trying to create folder '%s' failed",szFolderName);
-			}
-		}
+        if ( mkdir(szFolderName, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0 ) 
+		botMessage(NULL,0,"Trying to create folder '%s' successful",szFolderName);
+	else
+		botMessage(NULL,0,"Trying to create folder '%s' failed",szFolderName);
 #endif   
 	}
 
@@ -1037,6 +979,7 @@ void CBotGlobals :: buildFileName ( char *szOutput, const char *szFile, const ch
 	{
 #ifdef HOMEFOLDER
 		char home[512];
+		home[0] = 0;
 #endif
 		szOutput[0] = 0;
 

@@ -1,6 +1,5 @@
 #include "bot.h"
 #include "bot_kv.h"
-#include "bot_globals.h"
 
 void CRCBotKeyValueList :: parseFile ( FILE *fp )
 {
@@ -31,9 +30,6 @@ void CRCBotKeyValueList :: parseFile ( FILE *fp )
 			continue;
 
 		if ( buffer[iLen-1] == '\n' )
-			buffer[--iLen] = 0;
-
-		if ( buffer[iLen-1] == '\r' )
 			buffer[--iLen] = 0;
 
 		bHaveKey = false;
@@ -68,8 +64,6 @@ void CRCBotKeyValueList :: parseFile ( FILE *fp )
 
 		szKey[iKi] = 0;
 		szValue[iVi] = 0;
-
-		CBotGlobals::botMessage(NULL,0,"m_KVs.push_back(%s,%s)",szKey, szValue);
 
 		m_KVs.push_back(new CRCBotKeyValue(szKey,szValue));
 

@@ -64,11 +64,6 @@
 #include "bot_const.h"
 #include "bot_ehandle.h"
 #include <queue>
-
-#if defined WIN32 && !defined snprintf
-#define snprintf _snprintf
-#endif
-
 using namespace std;
 
 #define MAX_AMMO_TYPES 32
@@ -743,7 +738,7 @@ public:
 
 	void selectWeaponName ( const char *szWeaponName );
 
-	CBotWeapon *getCurrentWeapon ();
+	virtual CBotWeapon *getCurrentWeapon ();
 
 	void kill ();
 
@@ -784,7 +779,7 @@ public:
 
 	inline void resetLookAroundTime () { m_fLookAroundTime = 0.0f; }
 
-	Vector snipe ( Vector &vAiming );
+	inline Vector snipe ( Vector &vAiming );
 
 	//inline void dontAvoid () { m_fAvoidTime = engine->Time() + 1.0f; }
 
@@ -1209,9 +1204,6 @@ public:
 	static void runPlayerMoveAll ();
 
 	static bool addBot ( const char *szClass, const char *szTeam, const char *szName );
-
-	static CBot *get ( int iIndex ) { return m_Bots[iIndex]; }
-	static CBot *get ( edict_t *pPlayer ) { return m_Bots[slotOfEdict(pPlayer)]; }
 
 private:
 	static CBot **m_Bots;
