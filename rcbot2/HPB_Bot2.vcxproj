@@ -141,13 +141,9 @@ copy "$(TargetPath)" "C:\Program Files (x86)\Steam\SteamApps\common\Day of Defea
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CustomBuildStep>
-      <Command>copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Day of Defeat Source\dod\addons\rcbot2meta.dll"
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2 Deathmatch\hl2mp\addons\rcbot2meta.dll"
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\SteamApps\common\team fortress 2\tf\addons\rcbot2meta.dll"
-copy "$(ProjectDir)\update.txt" "C:\Program Files (x86)\Steam\steamapps\paul.murphy%40ntlworld.com\xxrcinstall\files\rcbot2\manual\version.txt"
-copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\paul.murphy%40ntlworld.com\xxrcinstall\files\rcbot2meta.dll"
-</Command>
-      <Outputs>c:\Program Files (x86)\Steam\steamapps\paul.murphy%40ntlworld.com\half-life deathmatch source\bin\HPB_Bot2.dll;c:\Program Files (x86)\Steam\steamapps\paul.murphy%40ntlworld.com\team fortress 2\bin\HPB_Bot2.dll;c:\Program Files (x86)\Steam\steam-apps\paul.murphy%40ntlworld.com\synergy\bin\HPB_Bot2.dll;C:\Program Files (x86)\Steam\steamapps\paul.murphy%40ntlworld.com\half-life 2 deathmatch\bin\HPB_Bot2.dll;C:\Program Files (x86)\Steam\steamapps\paul.murphy%40ntlworld.com\day of defeat source\bin\HPB_Bot2.dll;C:\Program Files (x86)\Steam\steamapps\common\Day of Defeat Source\bin\HPB_Bot2.dll;C:\Program Files (x86)\Steam\steamapps\common\Half-Life 2 Deathmatch\bin\HPB_Bot2.dll;C:\Program Files (x86)\Steam\steamapps\common\team fortress 2\bin\HPB_Bot2.dll;%(Outputs)</Outputs>
+      <Command>
+      </Command>
+      <Outputs>$(Outputs)</Outputs>
     </CustomBuildStep>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -162,7 +158,7 @@ copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\paul.murphy%40ntlwo
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>..\..\public\mathlib;..\..\public;..\..\public\engine;..\..\public\tier0;..\..\public\tier1;..\..\dlls;..\..\game_shared;..\..\game\shared;..\..\game\server;..\..\public\game\server;..\metamod-source-mmsource-1.10.4\core\;..\metamod-source-mmsource-1.10.4\core\sourcehook\;..\metamod-source-mmsource-1.10.4\public\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\..;$(HL2SDKOBVALVE)\public\mathlib;$(HL2SDKOBVALVE)\public;$(HL2SDKOBVALVE)\public\engine;$(HL2SDKOBVALVE)\public\tier0;$(HL2SDKOBVALVE)\public\tier1;$(HL2SDKOBVALVE)\dlls;$(HL2SDKOBVALVE)\game_shared;$(HL2SDKOBVALVE)\game\shared;$(HL2SDKOBVALVE)\game\server;$(HL2SDKOBVALVE)\public\game\server;$(MMSOURCE)\core;$(MMSOURCE)\core\sourcehook;$(MMSOURCE)\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SOURCE_ENGINE=4;WIN32;NDEBUG;_WINDOWS;HOMEFOLDER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -191,7 +187,7 @@ copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\paul.murphy%40ntlwo
       </AdditionalDependencies>
       <OutputFile>.\Release/rcbot2meta.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\..\lib\public;..\..\lib\common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(HL2SDKOBVALVE)\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBC;LIBCD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Release/HPB_bot2.pdb</ProgramDatabaseFile>
@@ -392,16 +388,12 @@ copy "$(ProjectDir)\update.txt" "C:\Program Files (x86)\Steam\steamapps\paul.mur
     <ClInclude Include="bot_plugin_meta.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="tf2weaponsgive.txt" />
-    <Text Include="update.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\..\lib\public\mathlib.lib" />
-    <Library Include="..\..\lib\public\tier0.lib" />
-    <Library Include="..\..\lib\public\tier1.lib" />
-    <Library Include="..\..\lib\public\tier2.lib" />
-    <Library Include="..\..\lib\public\tier3.lib" />
-    <Library Include="..\..\lib\public\vstdlib.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\mathlib.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\tier0.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\tier1.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\tier2.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\tier3.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\vstdlib.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

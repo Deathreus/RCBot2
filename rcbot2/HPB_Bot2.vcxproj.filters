@@ -9,9 +9,6 @@
       <UniqueIdentifier>{16586188-ff32-4199-a515-f5a8fb020e68}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
-    <Filter Include="text">
-      <UniqueIdentifier>{3933157c-eb73-42a0-8f99-381e563f566c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bot.cpp">
@@ -378,19 +375,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="update.txt">
-      <Filter>text</Filter>
-    </Text>
-    <Text Include="tf2weaponsgive.txt">
-      <Filter>text</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\..\lib\public\mathlib.lib" />
-    <Library Include="..\..\lib\public\tier0.lib" />
-    <Library Include="..\..\lib\public\tier1.lib" />
-    <Library Include="..\..\lib\public\tier2.lib" />
-    <Library Include="..\..\lib\public\tier3.lib" />
-    <Library Include="..\..\lib\public\vstdlib.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\tier0.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\tier1.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\tier2.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\tier3.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\vstdlib.lib" />
+    <Library Include="..\..\..\..\..\..\AlliedModders\hl2sdk-hl2dm\lib\public\mathlib.lib" />
   </ItemGroup>
 </Project>
