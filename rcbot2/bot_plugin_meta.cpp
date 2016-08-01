@@ -1220,8 +1220,6 @@ bool RCBotPluginMeta::Hook_LevelInit(const char *pMapName,
 	// Must set this
 	CBotGlobals::setMapName(pMapName);
 
-	Msg( "Level \"%s\" has been loaded\n", pMapName );
-
 	CWaypoints::precacheWaypointTexture();
 
 	CWaypointDistances::reset();
