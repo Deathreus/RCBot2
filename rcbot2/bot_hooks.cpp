@@ -241,7 +241,7 @@ void HookGiveNamedItem ( edict_t *edict )
 {
 	extern ConVar rcbot_givenameditem_offset;
 	extern ConVar rcbot_equipwearable_offset;
-	CBaseEntity *BasePlayer = servergameents->EdictToBaseEntity(edict);//(CBaseEntity *)(edict->GetUnknown()->GetBaseEntity());
+	CBaseEntity *BasePlayer = servergameents->EdictToBaseEntity(edict);
 
 	if((TF2GiveNamedItem == 0x0) && BasePlayer && CBotGlobals::isCurrentMod(MOD_TF2) )
 	{

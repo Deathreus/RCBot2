@@ -473,8 +473,6 @@ void CTeamFortress2Mod :: setupLoadOutWeapons ()
 							if ((iclass & (1 << i)) > 0)
 								m_pLoadoutWeapons[islot][i - 1].push_back(added);
 						}
-
-						CBotGlobals::botMessage(NULL, 0, "FOUND hat : %s", loadout->GetString("name"));
 					}
 				}
 

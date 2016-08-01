@@ -73,12 +73,7 @@ public: //IMetamodListener stuff
 public: //hooks
 
 	void Hook_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax);
-	bool Hook_LevelInit(const char *pMapName,
-		char const *pMapEntities,
-		char const *pOldLevel,
-		char const *pLandmarkName,
-		bool loadGame,
-		bool background);
+	bool Hook_LevelInit(const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background);
 	void Hook_GameFrame(bool simulating);
 	void Hook_LevelShutdown(void);
 	void Hook_ClientActive(edict_t *pEntity, bool bLoadGame);
@@ -93,11 +88,7 @@ public: //hooks
 	void Hook_EquipWearable(CEconWearable *pItem);
 	void Hook_EquipWeapon(CBaseEntity *pWeapon);
 	void Hook_RemovePlayerItem(CBaseEntity *pWeapon);
-	bool Hook_ClientConnect(edict_t *pEntity, 
-		const char *pszName,
-		const char *pszAddress,
-		char *reject,
-		int maxrejectlen);
+	bool Hook_ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress, char *reject, int maxrejectlen);
 	bf_write *Hook_MessageBegin(IRecipientFilter *filter, int msg_type);
 	void Hook_MessageEnd();
 

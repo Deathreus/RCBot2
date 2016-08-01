@@ -138,8 +138,6 @@ void CBotProfiles :: setupProfiles ()
 			CBotProfile read;
 			CRCBotKeyValueList *pKVL = new CRCBotKeyValueList();
 
-			CBotGlobals::botMessage(NULL,0,"Reading bot profile \"%s\"",filename);
-
 			pKVL->parseFile(fp);
 
 			READ_PROFILE_INT("team",m_iTeam);
@@ -162,7 +160,7 @@ void CBotProfiles :: setupProfiles ()
 		else
 		{
 			bDone = true;
-			CBotGlobals::botMessage(NULL,0,"Bot profile \"%s\" not found",filename);
+			CBotGlobals::botMessage(NULL,0,"Bot profile \"%s\" not found, ended reading profiles",filename);
 		}
 
 		iId ++;
