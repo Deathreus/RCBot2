@@ -1521,7 +1521,7 @@ void CBotFortress :: selectTeam ()
 {
 	char buffer[32];
 
-	int team = randomInt(1,2);
+	int team = CTeamFortress2Mod::isMapType(TF_MAP_MVM) ? 1 : randomInt(1, 2);
 
 	sprintf(buffer,"jointeam %d",team);
 
@@ -1539,6 +1539,24 @@ void CBotFortress :: selectClass ()
 		_class = (TF_Class)m_iDesiredClass;
 
 	m_iClass = _class;
+
+	if (_class != TF_CLASS_SCOUT)
+	{
+		if ((CTeamFortress2Mod::isMapType(TF_MAP_MVM) && GetClassCount(TF_CLASS_SCOUT) < 1) || (GetClassCount(TF_CLASS_SCOUT) < (m_iTeam == TF2_TEAM_BLUE) ? 0 : 3))
+			_class = TF_CLASS_SCOUT;
+	}
+
+	if (_class != TF_CLASS_ENGINEER)
+	{
+		if ((CTeamFortress2Mod::isMapType(TF_MAP_MVM) && GetClassCount(TF_CLASS_ENGINEER) < 1) || (GetClassCount(TF_CLASS_ENGINEER) < (m_iTeam == TF2_TEAM_RED) ? 0 : 3))
+			_class = TF_CLASS_ENGINEER;
+	}
+
+	if (_class != TF_CLASS_MEDIC)
+	{
+		if ((CTeamFortress2Mod::isMapType(TF_MAP_MVM) && GetClassCount(TF_CLASS_MEDIC) < 1) || (GetClassCount(TF_CLASS_MEDIC) < randomInt(1, 2)))
+			_class = TF_CLASS_MEDIC;
+	}
 
 	if ( _class == TF_CLASS_SCOUT )
 	{
@@ -1579,6 +1597,17 @@ void CBotFortress :: selectClass ()
 	helpers->ClientCommand(m_pEdict,buffer);
 
 	m_fChangeClassTime = engine->Time() + randomFloat(bot_min_cc_time.GetFloat(),bot_max_cc_time.GetFloat());
+}
+
+int CBotFortress::GetClassCount(TF_Class _class)
+{
+	int num = 0;
+	for (int i = 1; i <= MAX_PLAYERS; i++)
+	{
+		if ((TF_Class)CClassInterface::getTF2Class(INDEXENT(i)) == _class)
+			num++;
+	}
+	return num;
 }
 
 bool CBotFortress :: waitForFlag ( Vector *vOrigin, float *fWait, bool bFindFlag )

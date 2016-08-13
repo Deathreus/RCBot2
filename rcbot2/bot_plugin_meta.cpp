@@ -32,8 +32,6 @@
 #include "time.h"
 #include "irecipientfilter.h"
 
-#include "KeyValues.h"
-
 #include "bot_cvars.h"
 
 // for IServerTools

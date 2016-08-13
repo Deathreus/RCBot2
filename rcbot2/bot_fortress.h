@@ -597,6 +597,8 @@ public:
 
 	virtual void setClass ( TF_Class _class );
 
+	virtual int GetClassCount( TF_Class _class );
+
 	inline edict_t *seeFlag ( bool reset = false ) { if ( reset ) { m_pFlag = NULL; } return m_pFlag; }
 
 	virtual bool canAvoid ( edict_t *pEntity );
