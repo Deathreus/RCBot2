@@ -115,13 +115,6 @@
     <ClInclude Include="..\rcbot2\bot_zombie.h" />
     <ClInclude Include="..\rcbot2\engine_wrappers.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\lib\public\mathlib.lib" />
-    <Library Include="..\lib\public\tier0.lib" />
-    <Library Include="..\lib\public\tier1.lib" />
-    <Library Include="..\lib\public\tier2.lib" />
-    <Library Include="..\lib\public\vstdlib.lib" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B6572CBE-7C7F-4FFF-94DE-AFBBBAB11C64}</ProjectGuid>
     <RootNamespace>HPB_bot2</RootNamespace>
@@ -292,11 +285,10 @@ copy "$(TargetPath)" "C:\Program Files (x86)\Steam\SteamApps\common\Day of Defea
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>mathlib.lib;vstdlib.lib;tier1.lib;tier0.lib;tier2.lib;$(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\Release/rcbot2meta.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(HL2SDKTF2)\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBC;LIBCD;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Release/HPB_bot2.pdb</ProgramDatabaseFile>

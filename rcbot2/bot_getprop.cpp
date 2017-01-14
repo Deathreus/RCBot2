@@ -489,6 +489,7 @@ void CClassInterface:: init ()
 		DEFINE_GETPROP(GETPROP_TF2_CHARGE_RESIST_TYPE, "CWeaponMedigun", "m_nChargeResistType", 0);
 		DEFINE_GETPROP(GETPROP_TF2_ROUNDSTATE, "CTFGameRulesProxy", "m_iRoundState", 0);
 		DEFINE_GETPROP(GETPROP_TF2DESIREDCLASS, "CTFPlayer", "m_iDesiredClass", 0);
+		DEFINE_GETPROP(GETPROP_MVMHASMINPLAYERSREADY, "CTFGameRulesProxy", "m_bHaveMinPlayersToEnableReady", 0);
 
 		for ( unsigned int i = 0; i < GET_PROPDATA_MAX; i ++ )
 		{
@@ -730,6 +731,36 @@ edict_t *CClassInterface::FindEntityByNetClass(int start, const char *classname)
 	return NULL;
 }
 
+bool CClassInterface::TF2_MVMIsPlayerReady(void *pGamerules, int client)
+{
+	if (!pGamerules)
+		return false;
+
+	static SendTable *pTable = NULL;
+	static SendProp *pProp = NULL;
+
+	static ServerClass *pClass = UTIL_FindServerClass("CTFGameRulesProxy");
+	pTable = pClass->m_pTable;
+
+	int iMaxProps = pTable->GetNumProps();
+	for (int i = 0; i < iMaxProps; i++)
+	{
+		pProp = pTable->GetProp(i);
+		if (!strcmp(pProp->GetName(), "m_bPlayerReady"))
+		{
+			pTable = pProp->GetDataTable();
+			break;
+		}
+	}
+
+	if (!pTable)
+		return false;
+
+	pProp = pTable->GetProp(client);
+	int iOffset = pProp->GetOffset();
+
+	return *(bool *)((intptr_t)pGamerules + iOffset) ? 1 : 0;
+}
 
  int CClassInterface::getTF2Score ( edict_t *edict ) 
 	{ 

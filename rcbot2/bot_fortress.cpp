@@ -54,7 +54,7 @@
 #include "bot_mtrand.h"
 #include "bot_wpt_dist.h"
 #include "bot_squads.h"
-//#include "bot_hooks.h"
+#include "bot_sigscan.h"
 
 extern ConVar bot_beliefmulti;
 extern ConVar bot_spyknifefov;
@@ -1456,6 +1456,33 @@ void CBotFortress :: modThink ()
 			m_pSchedules->addFront(pSchedule);
 		}
 	}
+
+	if (CTeamFortress2Mod::isMapType(TF_MAP_MVM))
+	{
+		if (CClassInterface::TF2_MVMMinPlayersToReady(GetGameRules()))
+		{
+			int readycount = 0;
+			for (short int i = 1; i <= MAX_PLAYERS; i++)
+			{
+				edict_t *pClient = INDEXENT(i);
+				IPlayerInfo *pl = playerinfomanager->GetPlayerInfo(pClient);
+				if (pl->IsConnected() && !pl->IsFakeClient())
+				{
+					if (CClassInterface::TF2_MVMIsPlayerReady(GetGameRules(), i))
+						readycount++;
+				}
+
+				CBot *pBot = CBots::getBotPointer(pClient);
+				if (pBot->inUse())
+				{
+					if (readycount > 0)
+						helpers->ClientCommand(pClient, "tournament_player_readystate 1");
+					else
+						helpers->ClientCommand(pClient, "tournament_player_readystate 0");
+				}
+			}
+		}
+	}
 }
 
 
@@ -1540,24 +1567,6 @@ void CBotFortress :: selectClass ()
 
 	m_iClass = _class;
 
-	if (_class != TF_CLASS_SCOUT)
-	{
-		if ((CTeamFortress2Mod::isMapType(TF_MAP_MVM) && GetClassCount(TF_CLASS_SCOUT) < 1) || (GetClassCount(TF_CLASS_SCOUT) < (m_iTeam == TF2_TEAM_RED) ? 0 : 3))
-			_class = TF_CLASS_SCOUT;
-	}
-
-	if (_class != TF_CLASS_ENGINEER)
-	{
-		if ((CTeamFortress2Mod::isMapType(TF_MAP_MVM) && GetClassCount(TF_CLASS_ENGINEER) < 1) || (GetClassCount(TF_CLASS_ENGINEER) < (m_iTeam == TF2_TEAM_BLUE) ? 0 : 3))
-			_class = TF_CLASS_ENGINEER;
-	}
-
-	if (_class != TF_CLASS_MEDIC)
-	{
-		if ((CTeamFortress2Mod::isMapType(TF_MAP_MVM) && GetClassCount(TF_CLASS_MEDIC) < 1) || (GetClassCount(TF_CLASS_MEDIC) < randomInt(1, 2)))
-			_class = TF_CLASS_MEDIC;
-	}
-
 	if ( _class == TF_CLASS_SCOUT )
 	{
 		sprintf(buffer,"joinclass scout");
@@ -1594,9 +1603,9 @@ void CBotFortress :: selectClass ()
 	{
 		sprintf(buffer,"joinclass sniper");
 	}
-	helpers->ClientCommand(m_pEdict,buffer);
+	helpers->ClientCommand(m_pEdict, buffer);
 
-	m_fChangeClassTime = engine->Time() + randomFloat(bot_min_cc_time.GetFloat(),bot_max_cc_time.GetFloat());
+	m_fChangeClassTime = engine->Time() + randomFloat(bot_min_cc_time.GetFloat(), bot_max_cc_time.GetFloat());
 }
 
 int CBotFortress::GetClassCount(TF_Class _class)
