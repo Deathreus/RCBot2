@@ -9,7 +9,7 @@ static ICvar *s_pCVar;
 
 ConVar rcbot_tf2_debug_spies_cloakdisguise("rcbot_tf2_debug_spies_cloakdisguise","1",0,"Debug command : allow spy bots to cloak and disguise");
 ConVar rcbot_tf2_medic_letgotime("rcbot_tf2_medic_letgotime","0.4",0,"Time for medic to let go of medigun to switch players");
-ConVar rcbot_const_round_offset("rcbot_const_round_offset","852",0,"TF2 OFFSET for Round Class");
+ConVar rcbot_const_round_offset("rcbot_const_round_offset","856",0,"TF2 OFFSET for Round Class");
 
 //ConVar rcbot_const_point_offset("rcbot_const_pnt_offset","1140",0,"TF2 OFFSET for Point Class");
 //ConVar rcbot_const_point_data_offset("rcbot_const_pnt_data_offset","1642",0,"TF2 OFFSET for Point Class data");
@@ -112,7 +112,7 @@ ConVar rcbot_equiphats("rcbot_equiphats", "0", 0, "Allow bots to quip a random h
 ConVar rcbot_gamerules_offset("rcbot_gamerules_offset", "5", 0, "offset for gamerules object");
 
 // ENTIY SIZE OFFSET
-ConVar rcbot_const_point_master_offset("rcbot_const_mstr_offset", "852", 0, "TF2 OFFSET for Point Master Class");
+ConVar rcbot_const_point_master_offset("rcbot_const_mstr_offset", "856", 0, "TF2 OFFSET for Point Master Class");
 
 // CBASEENTITY OFFSETS
 ConVar rcbot_weaponequip_offset("rcbot_weaponequip_offset",			"262", 0, "offset for weapon equip function");
