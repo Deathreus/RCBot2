@@ -1041,17 +1041,12 @@ void CBotGlobals :: buildFileName ( char *szOutput, const char *szFile, const ch
 
 QAngle CBotGlobals::playerAngles ( edict_t *pPlayer )
 {
-	IPlayerInfo *pPlayerInfo = playerinfomanager->GetPlayerInfo(pPlayer);
-	CBotCmd lastCmd = pPlayerInfo->GetLastUserCommand();
-	return lastCmd.viewangles;
+	return playerinfomanager->GetPlayerInfo(pPlayer)->GetLastUserCommand().viewangles;
 }
 
 QAngle CBotGlobals :: entityEyeAngles ( edict_t *pEntity )
 {
 	return playerinfomanager->GetPlayerInfo(pEntity)->GetAbsAngles();
-	//CBaseEntity *pBaseEntity = CBaseEntity::Instance(pEntity);
-
-	//return pBaseEntity->EyeAngles();
 }
 
 void CBotGlobals :: fixFloatAngle ( float *fAngle ) 
@@ -1124,73 +1119,3 @@ void CBotGlobals::teleportPlayer ( edict_t *pPlayer, Vector v_dest )
 	if ( pClient )
 		pClient->teleportTo(v_dest);
 }
-/*
-
-static void TeleportEntity( CBaseEntity *pSourceEntity, TeleportListEntry_t &entry, const Vector *newPosition, const QAngle *newAngles, const Vector *newVelocity )
-{
-	CBaseEntity *pTeleport = entry.pEntity;
-	Vector prevOrigin = entry.prevAbsOrigin;
-	QAngle prevAngles = entry.prevAbsAngles;
-
-	int nSolidFlags = pTeleport->GetSolidFlags();
-	pTeleport->AddSolidFlags( FSOLID_NOT_SOLID );
-
-	// I'm teleporting myself
-	if ( pSourceEntity == pTeleport )
-	{
-		if ( newAngles )
-		{
-			pTeleport->SetLocalAngles( *newAngles );
-			if ( pTeleport->IsPlayer() )
-			{
-				CBasePlayer *pPlayer = (CBasePlayer *)pTeleport;
-				pPlayer->SnapEyeAngles( *newAngles );
-			}
-		}
-
-		if ( newVelocity )
-		{
-			pTeleport->SetAbsVelocity( *newVelocity );
-			pTeleport->SetBaseVelocity( vec3_origin );
-		}
-
-		if ( newPosition )
-		{
-			pTeleport->AddEffects( EF_NOINTERP );
-			UTIL_SetOrigin( pTeleport, *newPosition );
-		}
-	}
-	else
-	{
-		// My parent is teleporting, just update my position & physics
-		pTeleport->CalcAbsolutePosition();
-	}
-	IPhysicsObject *pPhys = pTeleport->VPhysicsGetObject();
-	bool rotatePhysics = false;
-
-	// handle physics objects / shadows
-	if ( pPhys )
-	{
-		if ( newVelocity )
-		{
-			pPhys->SetVelocity( newVelocity, NULL );
-		}
-		const QAngle *rotAngles = &pTeleport->GetAbsAngles();
-		// don't rotate physics on players or bbox entities
-		if (pTeleport->IsPlayer() || pTeleport->GetSolid() == SOLID_BBOX )
-		{
-			rotAngles = &vec3_angle;
-		}
-		else
-		{
-			rotatePhysics = true;
-		}
-
-		pPhys->SetPosition( pTeleport->GetAbsOrigin(), *rotAngles, true );
-	}
-
-	g_pNotify->ReportTeleportEvent( pTeleport, prevOrigin, prevAngles, rotatePhysics );
-
-	pTeleport->SetSolidFlags( nSolidFlags );
-}
-*/

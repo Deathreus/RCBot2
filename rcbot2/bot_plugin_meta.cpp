@@ -522,9 +522,7 @@ void RCBotPluginMeta::Hook_PlayerRunCmd(CUserCmd *ucmd, IMoveHelper *moveHelper)
 {
 	static CBot *pBot;
 
-	CBaseEntity *pPlayer = META_IFACEPTR(CBaseEntity);
-
-	edict_t *pEdict = servergameents->BaseEntityToEdict(pPlayer);
+	edict_t *pEdict = servergameents->BaseEntityToEdict(META_IFACEPTR(CBaseEntity));
 
 	pBot = CBots::getBotPointer(pEdict);
 	
@@ -571,8 +569,7 @@ void RCBotPluginMeta::Hook_EquipWearable(CEconWearable *pItem)
 
 CBaseEntity *RCBotPluginMeta::Hook_GiveNamedItem( const char *name, int subtype, CEconItemView *cscript, bool b )
 {
-	CBaseEntity *pPlayer = META_IFACEPTR(CBaseEntity);
-	edict_t *pEdict = servergameents->BaseEntityToEdict(pPlayer);
+	edict_t *pEdict = servergameents->BaseEntityToEdict(META_IFACEPTR(CBaseEntity));
 	CBot *pBot = NULL;
 
 	if (rcbot_customloadouts.GetBool() && ((pBot = CBots::getBotPointer(pEdict)) != NULL) && cscript)

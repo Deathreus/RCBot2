@@ -53,7 +53,6 @@ using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 // GENERIC CLASSES
-//#include "vstdlib/random.h" // for random functions
 // Typical Node
 template <class T>
 class dataNode
