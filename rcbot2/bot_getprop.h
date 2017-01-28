@@ -217,7 +217,7 @@ public:
 		if ( !m_data ) 
 			return NULL; 
 
-		return ((bool*)m_data); 
+		return ((bool*)m_data);
 	}
 
 	inline void *getVoidPointer ( edict_t *edict ) 
@@ -435,16 +435,6 @@ public:
 		int* p = g_GetProps[GETPROP_TF2DESIREDCLASS].getIntPointer(edict);
 		if (p != NULL) *p = _class;
 	}
-	
-	inline static bool TF2_MVMMinPlayersToReady(void *gamerules)
-	{
-		if (!gamerules)
-			return false;
-
-		return g_GetProps[GETPROP_MVMHASMINPLAYERSREADY].getBool(gamerules, false, false);
-	}
-
-	static bool TF2_MVMIsPlayerReady(void *gamerules, int client);
 
 	inline static bool TF2_IsMedievalMode(void*gamerules) { return g_GetProps[GETPROP_TF2_MEDIEVALMODE].getBool(gamerules, false, false);}
 
@@ -783,6 +773,16 @@ public:
 	{
 		return g_GetProps[GETPROP_SENTRYGUN_PLACING].getBool(pSentry,false);
 	}
+
+	static bool TF2_MVMMinPlayersToReady(void *gamerules)
+	{
+		if (!gamerules)
+			return false;
+
+		return g_GetProps[GETPROP_MVMHASMINPLAYERSREADY].getBool(gamerules, false, false);
+	}
+
+	static bool TF2_MVMIsPlayerReady(void *gamerules, int client);
 
 private:
 	static CClassInterfaceValue g_GetProps[GET_PROPDATA_MAX];

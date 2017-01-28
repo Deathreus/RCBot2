@@ -71,6 +71,7 @@ extern ConVar rcbot_speed_boost;
 extern ConVar rcbot_projectile_tweak;
 
 extern IVDebugOverlay *debugoverlay;
+extern IServerPluginHelpers *helpers;
 
 #define TF2_SPY_CLOAK_BELIEF 40
 #define TF2_HWGUY_REV_BELIEF 60
@@ -1457,32 +1458,42 @@ void CBotFortress :: modThink ()
 		}
 	}
 
-	if (CTeamFortress2Mod::isMapType(TF_MAP_MVM))
+	/*if (CTeamFortress2Mod::isMapType(TF_MAP_MVM))
 	{
 		if (CClassInterface::TF2_MVMMinPlayersToReady(GetGameRules()))
 		{
+			static bool toggled[33];
 			int readycount = 0;
-			for (short int i = 1; i <= MAX_PLAYERS; i++)
+			for (int i = 1; i <= MAX_PLAYERS; i++)
 			{
-				edict_t *pClient = INDEXENT(i);
-				IPlayerInfo *pl = playerinfomanager->GetPlayerInfo(pClient);
-				if (pl->IsConnected() && !pl->IsFakeClient())
+				CClient *pClient = CClients::get(INDEXENT(i));
+				if (pClient->isUsed())
 				{
-					if (CClassInterface::TF2_MVMIsPlayerReady(GetGameRules(), i))
-						readycount++;
+					IPlayerInfo *pl = playerinfomanager->GetPlayerInfo(pClient->getPlayer());
+					if (!pl->IsFakeClient() && pl->IsConnected())
+					{
+						if (CClassInterface::TF2_MVMIsPlayerReady(GetGameRules(), i))
+							readycount++;
+					}
 				}
 
-				CBot *pBot = CBots::getBotPointer(pClient);
+				CBot *pBot = CBots::getBotPointer(INDEXENT(i));
 				if (pBot->inUse())
 				{
-					if (readycount > 0)
-						helpers->ClientCommand(pClient, "tournament_player_readystate 1");
-					else
-						helpers->ClientCommand(pClient, "tournament_player_readystate 0");
+					if (readycount > 0 && toggled[i] == false)
+					{
+						helpers->ClientCommand(pBot->getEdict(), "player_ready_toggle");
+						toggled[i] = true;
+					}
+					else if (toggled[i] == true)
+					{
+						helpers->ClientCommand(pBot->getEdict(), "player_ready_toggle");
+						toggled[i] = false;
+					}
 				}
 			}
 		}
-	}
+	}*/
 }
 
 
@@ -1548,7 +1559,22 @@ void CBotFortress :: selectTeam ()
 {
 	char buffer[32];
 
-	int team = CTeamFortress2Mod::isMapType(TF_MAP_MVM) ? 1 : randomInt(1, 2);
+	int team;
+	if (CTeamFortress2Mod::isMapType(TF_MAP_MVM))
+	{
+		team = 1;
+	}
+	else
+	{
+		int numRed = CTeamFortress2Mod::numPlayersOnTeam(TF2_TEAM_RED);
+		int numBlu = CTeamFortress2Mod::numPlayersOnTeam(TF2_TEAM_BLUE);
+		if (numRed < numBlu)
+			team = 1;
+		else if (numRed > numBlu)
+			team = 2;
+		else
+			team = randomInt(1, 2);
+	}
 
 	sprintf(buffer,"jointeam %d",team);
 

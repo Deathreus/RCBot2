@@ -1152,6 +1152,8 @@ public:
 
 	static CBot *getBotPointer ( edict_t *pEdict );
 
+	static CBot *getBotPointer( int slot );
+
 	static void freeMapMemory ();
 
 	static void freeAllMemory ();

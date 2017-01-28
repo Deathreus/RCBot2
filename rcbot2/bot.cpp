@@ -3535,6 +3535,19 @@ CBot *CBots :: getBotPointer ( edict_t *pEdict )
 	return NULL;
 }
 
+CBot *CBots::getBotPointer(int slot)
+{
+	if ((slot < 0) || (slot >= MAX_PLAYERS))
+		return NULL;
+
+	CBot *pBot = m_Bots[slot];
+
+	if (pBot->inUse())
+		return pBot;
+
+	return NULL;
+}
+
 void CBots :: freeMapMemory ()
 {
 	if ( m_Bots == NULL )

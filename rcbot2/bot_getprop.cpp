@@ -493,24 +493,16 @@ void CClassInterface:: init ()
 
 		for ( unsigned int i = 0; i < GET_PROPDATA_MAX; i ++ )
 		{
-			//if ( g_GetProps[i]
 			g_GetProps[i].findOffset();
 		}
 }
 
 void CClassInterface :: setupCTeamRoundTimer ( CTeamRoundTimer *pTimer )
 {
-	/*
-		GETPROP_TF2_RNDTM_m_flTimerEndTime,
-	GETPROP_TF2_RNDTM_m_nSetupTimeLength,
-	GETPROP_TF2_RNDTM_m_bInSetup,
-	*/
 	pTimer->m_flTimerEndTime = g_GetProps[GETPROP_TF2_RNDTM_m_flTimerEndTime].getFloatPointer(pTimer->m_Resource);
 	pTimer->m_nSetupTimeLength = g_GetProps[GETPROP_TF2_RNDTM_m_nSetupTimeLength].getIntPointer(pTimer->m_Resource);
 	pTimer->m_bInSetup = g_GetProps[GETPROP_TF2_RNDTM_m_bInSetup].getBoolPointer(pTimer->m_Resource);
 }
-
-//#define GETTF2OBJ_INT(x) pResource->x = g_GetProps[GETPROP_TF2_OBJTR_#x].getIntPointer(edict);
 
 bool CClassInterface :: getTF2ObjectiveResource ( CTFObjectiveResource *pResource )
 {
@@ -736,30 +728,48 @@ bool CClassInterface::TF2_MVMIsPlayerReady(void *pGamerules, int client)
 	if (!pGamerules)
 		return false;
 
-	static SendTable *pTable = NULL;
-	static SendProp *pProp = NULL;
+	SendTable *pTable = NULL;
+	SendProp *pProp = NULL;
+	int iOffset;
 
 	static ServerClass *pClass = UTIL_FindServerClass("CTFGameRulesProxy");
 	pTable = pClass->m_pTable;
 
-	int iMaxProps = pTable->GetNumProps();
-	for (int i = 0; i < iMaxProps; i++)
+	sm_sendprop_info_t info;
+	if (UTIL_FindInSendTable(pTable, "m_bPlayerReady", &info, 0))
 	{
-		pProp = pTable->GetProp(i);
-		if (!strcmp(pProp->GetName(), "m_bPlayerReady"))
+		pProp = info.prop;
+		iOffset = info.actual_offset;
+
+		if (pProp->GetType() == DPT_DataTable)
 		{
 			pTable = pProp->GetDataTable();
-			break;
-		}
-	}
+			if (!pTable)
+			{
+				return false;
+			}
 
-	if (!pTable)
+			int elementCount = pTable->GetNumProps();
+			if (client >= elementCount)
+			{
+				return false;
+			}
+
+			pProp = pTable->GetProp(client);
+			if (pProp->GetType() != DPT_Int)
+			{
+				return false;
+			}
+
+			iOffset += pProp->GetOffset();
+		}
+		else
+			return false;
+	}
+	else
 		return false;
 
-	pProp = pTable->GetProp(client);
-	int iOffset = pProp->GetOffset();
-
-	return *(bool *)((intptr_t)pGamerules + iOffset) ? 1 : 0;
+	return *(bool *)((intptr_t)pGamerules + iOffset);
 }
 
  int CClassInterface::getTF2Score ( edict_t *edict ) 
