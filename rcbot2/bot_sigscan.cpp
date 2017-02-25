@@ -568,7 +568,7 @@ CEconItemAttribute *TF2Attrib_GetByName(edict_t *entity, const char *strAttrib)
 	return pAttrib;
 }
 
-bool TF2_setAttribute(edict_t *pEdict, const char *szName, float flVal)
+bool TF2_SetAttribute(edict_t *pEdict, const char *szName, float flVal)
 {
 	// Creates the new Attribute
 	CEconItemAttribute *pAttrib = NULL;

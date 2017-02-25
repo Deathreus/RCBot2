@@ -6,7 +6,7 @@
  * ======================================================
  *
  * This software is provided 'as-is', without any express or implied warranty.
- * In no event will the authors be held liable for any damages arising from 
+ * In no event will the authors be held liable for any damages arising from
  * the use of this software.
  *
  * This sample plugin is public domain.
@@ -76,8 +76,8 @@ SH_DECL_HOOK2_void(IServerGameClients, ClientCommand, SH_NOATTRIB, 0, edict_t *,
 SH_DECL_HOOK1_void(IServerGameClients, ClientCommand, SH_NOATTRIB, 0, edict_t *);
 #endif
 
-SH_DECL_MANUALHOOK2_void(MHook_PlayerRunCmd, 0, 0, 0, CUserCmd*, IMoveHelper*); 
-SH_DECL_MANUALHOOK4(MHook_GiveNamedItem, 0, 0, 0,CBaseEntity*, const char *,int,CEconItemView*,bool); 
+SH_DECL_MANUALHOOK2_void(MHook_PlayerRunCmd, 0, 0, 0, CUserCmd*, IMoveHelper*);
+SH_DECL_MANUALHOOK4(MHook_GiveNamedItem, 0, 0, 0, CBaseEntity*, const char *, int, CEconItemView*, bool);
 
 SH_DECL_MANUALHOOK1_void(MHook_EquipWearable, 0, 0, 0, CEconWearable*);
 SH_DECL_MANUALHOOK1_void(MHook_EquipWeapon, 0, 0, 0, CBaseEntity*);
@@ -86,21 +86,6 @@ SH_DECL_MANUALHOOK1_void(MHook_RemovePlayerItem, 0, 0, 0, CBaseEntity*);
 
 //SH_DECL_MANUALHOOK1(MHook_WeaponEquip,0,0,0)
 
-/*
-SH_DECL_HOOK1_void(bf_write, WriteChar, SH_NOATTRIB, 0, int);
-SH_DECL_HOOK1_void(bf_write, WriteShort, SH_NOATTRIB, 0, int);
-SH_DECL_HOOK1_void(bf_write, WriteByte, SH_NOATTRIB, 0, int);
-SH_DECL_HOOK1_void(bf_write, WriteFloat, SH_NOATTRIB, 0, float);
-SH_DECL_HOOK1(bf_write, WriteString, SH_NOATTRIB, 0, bool, const char *);
-
-SH_DECL_HOOK2(IVEngineServer, UserMessageBegin, SH_NOATTRIB, 0, bf_write*, IRecipientFilter*, int);
-SH_DECL_HOOK0_void(IVEngineServer, MessageEnd, SH_NOATTRIB, 0);
-
-bf_write *current_msg = NULL;
-
-#define BUF_SIZ 1024
-char current_msg_buffer[BUF_SIZ];
-*/
 
 //CBaseEntity* (CBaseEntity::*TF2EquipWearable)(CBaseEntity*) = 0x0;
 CBaseEntity* (CBaseEntity::*TF2PlayerWeaponSlot)(int) = 0x0;
@@ -178,10 +163,8 @@ CON_COMMAND(rcbot_printattribs, "print attributes")
 
 		if (slot >= 0)
 		{
-
-			CBaseEntity *pEntity = RCBotPluginMeta::TF2_getPlayerWeaponSlot(pEdict, slot);
-
-			if (pEntity)
+			CBaseEntity *pEntity = RCBotPluginMeta::TF2_GetPlayerWeaponSlot(pEdict, slot);
+			if (pEntity != NULL)
 				pEdict = servergameents->BaseEntityToEdict(pEntity);
 		}
 
@@ -193,32 +176,31 @@ CON_COMMAND(rcbot_printattribs, "print attributes")
 CON_COMMAND(rcbot_setattrib, "set an attribute")
 {
 	if (args.ArgC() > 2)
-	{		
+	{
 		edict_t *pPlayer = CClients::getListenServerClient();
 		/*CBaseEntity *pEntity = pPlayer->GetUnknown()->GetBaseEntity();
-		
+
 
 		CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
 		unsigned int *mem = (unsigned int*)*(unsigned int*)pEnt;
 		int offset = 473;
-		
+
 		*(unsigned int*)&TF2GetAttributeList = mem[offset];
 
 		CAttributeList *pList = (*pEnt.*TF2GetAttributeList)();
 		*/
-		
-		CBaseEntity *pEntity = RCBotPluginMeta::TF2_getPlayerWeaponSlot(pPlayer, TF2_SLOT_PRMRY);
 
+		CBaseEntity *pEntity = RCBotPluginMeta::TF2_GetPlayerWeaponSlot(pPlayer, TF2_SLOT_PRMRY);
 		if (pEntity != NULL)
 		{
 			edict_t *pEdict = servergameents->BaseEntityToEdict(pEntity);
 
 			if (pEdict && !pEdict->IsFree())
-			{			
+			{
 				const char *strAttrib = args.Arg(1);
 				float flVal = atof(args.Arg(2));
 				//void (edict_t *pEdict, const char *szName, float flVal)
-				if (TF2_setAttribute(pEdict, strAttrib, flVal))
+				if (TF2_SetAttribute(pEdict, strAttrib, flVal))
 					CBotGlobals::botMessage(NULL, 0, "OK");
 				else
 					CBotGlobals::botMessage(NULL, 0, "FAIL");
@@ -231,16 +213,13 @@ CON_COMMAND(rcbot_setattrib, "set an attribute")
 
 CON_COMMAND(rcbotd, "access the bot commands on a server")
 {
-	eBotCommandResult iResult;
-
 	if (!engine->IsDedicatedServer() || !CBotGlobals::IsMapRunning())
 	{
 		CBotGlobals::botMessage(NULL, 0, "Error, no map running or not dedicated server");
 		return;
 	}
 
-	//iResult = CBotGlobals::m_pCommands->execute(NULL,engine->Cmd_Argv(1),engine->Cmd_Argv(2),engine->Cmd_Argv(3),engine->Cmd_Argv(4),engine->Cmd_Argv(5),engine->Cmd_Argv(6));
-	iResult = CBotGlobals::m_pCommands->execute(NULL, args.Arg(1), args.Arg(2), args.Arg(3), args.Arg(4), args.Arg(5), args.Arg(6));
+	eBotCommandResult iResult = CBotGlobals::m_pCommands->execute(NULL, args.Arg(1), args.Arg(2), args.Arg(3), args.Arg(4), args.Arg(5), args.Arg(6));
 
 	if (iResult == COMMAND_ACCESSED)
 	{
@@ -260,42 +239,13 @@ CON_COMMAND(rcbotd, "access the bot commands on a server")
 	}
 }
 
+
 /*
-bool RCBotPluginMeta :: ClearAttributeCache(edict_t *pedict)
-{
-	if (hSDKOnAttribValuesChanged == INVALID_HANDLE) return false;
-
-	if (pedict == NULL || pedict->IsFree() ) 
-		return false;
-
-	new offs = GetEntSendPropOffs(entity, "m_AttributeList", true);
-	if (offs <= 0) return false;
-	new Address:pAttribs = GetEntityAddress(entity);
-	if (pAttribs < Address_MinimumValid) return false;
-	pAttribs = Address:LoadFromAddress(pAttribs + Address:(offs + 24), NumberType_Int32);
-	if (pAttribs < Address_MinimumValid) return false;
-	SDKCall(hSDKOnAttribValuesChanged, pAttribs);
-	return true;
-}*/
-
-
-void RCBotPluginMeta::TF2_equipWearable(edict_t *pPlayer, CBaseEntity *pWearable)
-{
-	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
-	//unsigned int *mem = (unsigned int*)*(unsigned int*)pEnt;
-	//int offset = rcbot_equipwearable_offset.GetInt();
-	//*(unsigned int*)&TF2EquipWearable = mem[offset];
-
-	SH_MCALL(pEnt, MHook_EquipWearable)((CEconWearable*)pWearable);
-
-	//(*pEnt.*TF2EquipWearable)(pWearable);
-}
-/*			
 "CAttributeManager::OnAttributeValuesChanged"	//use instead of ClearCache/NotifyManagerOfAttributeValueChanges
 {
-	"windows"	"12"
-	"linux"		"13"
-	"mac"		"13"
+"windows"	"12"
+"linux"		"13"
+"mac"		"13"
 }
 */
 bool RCBotPluginMeta::TF2_ClearAttributeCache(edict_t *pEdict)
@@ -303,39 +253,29 @@ bool RCBotPluginMeta::TF2_ClearAttributeCache(edict_t *pEdict)
 	CAttributeList *pList = CClassInterface::getAttributeList(pEdict);
 
 	CAttributeManager *pManager = (CAttributeManager*)(((unsigned int)pList) + 24);
-
 	if (!pManager)
 		return false;
 
 	unsigned int *mem = (unsigned int*)*(unsigned int*)pManager;
-
 	if (!mem)
 		return false;
 
 	int offset = 12;
-	
 	*(unsigned int*)&OnAttributeValuesChanged = mem[offset];
-
 	if (!OnAttributeValuesChanged)
 		return false;
 
 	(*pManager.*OnAttributeValuesChanged)();
-
 	return true;
 }
 
-CBaseEntity *RCBotPluginMeta::TF2_getPlayerWeaponSlot(edict_t *pPlayer, int iSlot)
+void RCBotPluginMeta::TF2_EquipWearable(edict_t *pPlayer, CBaseEntity *pWearable)
 {
 	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
-	unsigned int *mem = (unsigned int*)*(unsigned int*)pEnt;
-	int offset = rcbot_getweaponslot_offset.GetInt();
-	
-	*(unsigned int*)&TF2PlayerWeaponSlot = mem[offset];
-
-	return (*pEnt.*TF2PlayerWeaponSlot)(iSlot);
+	SH_MCALL(pEnt, MHook_EquipWearable)((CEconWearable*)pWearable);
 }
 
-void RCBotPluginMeta::TF2_removeWearable(edict_t *pPlayer, CBaseEntity *pWearable)
+void RCBotPluginMeta::TF2_RemoveWearable(edict_t *pPlayer, CBaseEntity *pWearable)
 {
 	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
 	unsigned int *mem = (unsigned int*)*(unsigned int*)pEnt;
@@ -344,6 +284,112 @@ void RCBotPluginMeta::TF2_removeWearable(edict_t *pPlayer, CBaseEntity *pWearabl
 	*(unsigned int*)&TF2RemoveWearable = mem[offset];
 
 	(*pEnt.*TF2RemoveWearable)(pWearable);
+}
+
+void RCBotPluginMeta::TF2_EquipWeapon(edict_t *pPlayer, CBaseEntity *pWeapon)
+{
+	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
+	SH_MCALL(pEnt, MHook_EquipWeapon)(pWeapon);
+}
+
+void RCBotPluginMeta::TF2_RemovePlayerItem(edict_t *pPlayer, CBaseEntity *pItem)
+{
+	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
+	SH_MCALL(pEnt, MHook_RemovePlayerItem)(pItem);
+}
+
+CBaseEntity *RCBotPluginMeta::TF2_GetPlayerWeaponSlot(edict_t *pPlayer, int iSlot)
+{
+	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
+	unsigned int *mem = (unsigned int*)*(unsigned int*)pEnt;
+	int offset = rcbot_getweaponslot_offset.GetInt();
+
+	*(unsigned int*)&TF2PlayerWeaponSlot = mem[offset];
+
+	return (*pEnt.*TF2PlayerWeaponSlot)(iSlot);
+}
+
+void RCBotPluginMeta::TF2_RemoveWeaponSlot(edict_t *pPlayer, int iSlot)
+{
+	CBaseEntity *pWeaponInSlot = TF2_GetPlayerWeaponSlot(pPlayer, iSlot);
+
+	if (pWeaponInSlot)
+	{
+		// bug #6206
+		// papering over a valve bug where a weapon's extra wearables aren't properly removed from the weapon's owner
+		edict_t *extraWearable = CClassInterface::getExtraWearable(pPlayer);
+
+		if (extraWearable != NULL)
+		{
+			CBaseEntity *pEnt = servergameents->EdictToBaseEntity(extraWearable);
+			TF2_RemoveWearable(pPlayer, pEnt);
+		}
+
+		extraWearable = CClassInterface::getExtraWearableViewModel(pPlayer);
+
+		if (extraWearable != NULL)
+		{
+			CBaseEntity *pEnt = servergameents->EdictToBaseEntity(extraWearable);
+			TF2_RemoveWearable(pPlayer, pEnt);
+		}
+
+		TF2_RemovePlayerItem(pPlayer, pWeaponInSlot);
+
+		edict_t *pWeaponInSlotEdict = servergameents->BaseEntityToEdict(pWeaponInSlot);
+		//AcceptEntityInput(weaponIndex, "Kill");
+		engine->RemoveEdict(pWeaponInSlotEdict);
+	}
+}
+
+void RCBotPluginMeta::TF2_GiveRandomLoadout(edict_t *pPlayer, int iClass, int iSlot, void *pVTable, void *pVTable_Attributes)
+{
+	CTF2Loadout *p = CTeamFortress2Mod::findRandomWeaponLoadOutInSlot(iClass, iSlot);
+
+	if (p)
+	{
+		TF2_GivePlayerLoadOut(pPlayer, p, iSlot, pVTable, pVTable_Attributes);
+	}
+}
+// TF2 Items
+bool RCBotPluginMeta::TF2_GivePlayerLoadOut(edict_t *pPlayer, CTF2Loadout *pLoadout, int iSlot, void *pVTable, void *pVTable_Attributes)
+{
+	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
+	// first remove any thing from the slot
+	RCBotPluginMeta::TF2_RemoveWeaponSlot(pPlayer, iSlot);
+
+	CEconItemView hScriptCreatedItem;
+	memset(&hScriptCreatedItem, 0, sizeof(CEconItemView));
+
+	hScriptCreatedItem.m_pVTable = pVTable;
+	hScriptCreatedItem.m_AttributeList.m_pVTable = pVTable_Attributes;
+	hScriptCreatedItem.m_NetworkedDynamicAttributesForDemos.m_pVTable = pVTable_Attributes;
+
+	const char *strWeaponClassname = pLoadout->m_pszClassname;
+	hScriptCreatedItem.m_iItemDefinitionIndex = pLoadout->m_iIndex;
+	hScriptCreatedItem.m_iEntityLevel = randomInt(pLoadout->m_iMinLevel, pLoadout->m_iMaxLevel);
+	hScriptCreatedItem.m_iEntityQuality = pLoadout->m_iQuality;
+	CEconItemAttribute attribs[16];
+	int iSize = pLoadout->copyAttributesIntoArray(attribs, pVTable);
+	hScriptCreatedItem.m_AttributeList.m_Attributes.CopyArray(attribs, iSize);// pLoadout->m_Attributes, pLoadout->m_Attributes.size());
+	hScriptCreatedItem.m_bInitialized = true;
+	hScriptCreatedItem.m_bDoNotIterateStaticAttributes = true;
+
+	if (hScriptCreatedItem.m_iEntityQuality == 0 && iSize > 0)
+	{
+		hScriptCreatedItem.m_iEntityQuality = 6;
+	}
+
+	CBaseEntity *added = SH_MCALL(pEnt, MHook_GiveNamedItem)(strWeaponClassname, 0, &hScriptCreatedItem, rcbot_force_generation.GetBool());
+
+	if (added)
+	{
+		if ((iSlot == TF2_SLOT_MELEE) || (iSlot == TF2_SLOT_PRMRY) || (iSlot == TF2_SLOT_SCNDR))
+			TF2_EquipWeapon(pPlayer, added);
+		else
+			TF2_EquipWearable(pPlayer, added);
+	}
+
+	return added != NULL;
 }
 
 class CBotRecipientFilter : public IRecipientFilter
@@ -408,128 +454,15 @@ void RCBotPluginMeta::HudTextMessage(edict_t *pEntity, const char *szMessage)
 	kv->deleteThis();*/
 }
 
-void RCBotPluginMeta::TF2_equipWeapon(edict_t *pPlayer, CBaseEntity *pWeapon)
-{
-	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
-	//unsigned int *mem = (unsigned int*)*(unsigned int*)pEnt;
-	//int offset = rcbot_weaponequip_offset.GetInt();
-
-	//*(unsigned int*)&TF2WeaponEquip = mem[offset];
-
-	//(*pEnt.*TF2WeaponEquip)(pWeapon);
-
-	SH_MCALL(pEnt, MHook_EquipWeapon)(pWeapon);
-}
-
-void RCBotPluginMeta::TF2_removePlayerItem(edict_t *pPlayer, CBaseEntity *pItem)
-{
-	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
-	//unsigned int *mem = (unsigned int*)*(unsigned int*)pEnt;
-	//int offset = rcbot_rmplayeritem_offset.GetInt();
-
-	//*(unsigned int*)&TF2RemovePlayerItem = mem[offset];
-
-	//(*pEnt.*TF2RemovePlayerItem)(pItem);
-
-	SH_MCALL(pEnt, MHook_RemovePlayerItem)(pItem);
-}
-
-
-void RCBotPluginMeta::TF2_RemoveWeaponSlot(edict_t *pPlayer, int iSlot)
-{
-	CBaseEntity *pWeaponInSlot = TF2_getPlayerWeaponSlot(pPlayer, iSlot);
-	
-	if (pWeaponInSlot)
-	{
-		// bug #6206
-		// papering over a valve bug where a weapon's extra wearables aren't properly removed from the weapon's owner
-		edict_t *extraWearable = CClassInterface::getExtraWearable(pPlayer);
-
-		if (extraWearable != NULL)
-		{
-			CBaseEntity *pEnt = servergameents->EdictToBaseEntity(extraWearable);
-			TF2_removeWearable(pPlayer, pEnt);
-		}
-
-		extraWearable = CClassInterface::getExtraWearableViewModel(pPlayer);
-
-		if (extraWearable != NULL)
-		{
-			CBaseEntity *pEnt = servergameents->EdictToBaseEntity(extraWearable);
-			TF2_removeWearable(pPlayer, pEnt);
-		}
-
-		TF2_removePlayerItem(pPlayer, pWeaponInSlot);
-
-		edict_t *pWeaponInSlotEdict = servergameents->BaseEntityToEdict(pWeaponInSlot);
-		//AcceptEntityInput(weaponIndex, "Kill");
-		engine->RemoveEdict(pWeaponInSlotEdict);
-	}
-}
-
-void RCBotPluginMeta::giveRandomLoadout(edict_t *pPlayer, int iClass, int iSlot, void *pVTable, void *pVTable_Attributes)
-{
-	CTF2Loadout *p = CTeamFortress2Mod::findRandomWeaponLoadOutInSlot(iClass,iSlot);
-
-	if (p)
-	{
-		givePlayerLoadOut(pPlayer, p, iSlot, pVTable, pVTable_Attributes);
-	}
-}
-// TF2 Items
-bool RCBotPluginMeta::givePlayerLoadOut(edict_t *pPlayer, CTF2Loadout *pLoadout, int iSlot, void *pVTable, void *pVTable_Attributes)
-{
-	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pPlayer);
-	// first remove any thing from the slot
-	RCBotPluginMeta::TF2_RemoveWeaponSlot(pPlayer, iSlot);
-
-	CEconItemView hScriptCreatedItem;
-	memset(&hScriptCreatedItem, 0, sizeof(CEconItemView));
-
-	hScriptCreatedItem.m_pVTable = pVTable;
-	hScriptCreatedItem.m_AttributeList.m_pVTable = pVTable_Attributes;
-	hScriptCreatedItem.m_NetworkedDynamicAttributesForDemos.m_pVTable = pVTable_Attributes;
-
-	const char *strWeaponClassname = pLoadout->m_pszClassname;
-	hScriptCreatedItem.m_iItemDefinitionIndex = pLoadout->m_iIndex;
-	hScriptCreatedItem.m_iEntityLevel = randomInt(pLoadout->m_iMinLevel,pLoadout->m_iMaxLevel);
-	hScriptCreatedItem.m_iEntityQuality = pLoadout->m_iQuality;
-	CEconItemAttribute attribs[16];
-	int iSize = pLoadout->copyAttributesIntoArray(attribs, pVTable);
-	hScriptCreatedItem.m_AttributeList.m_Attributes.CopyArray(attribs, iSize);// pLoadout->m_Attributes, pLoadout->m_Attributes.size());
-	hScriptCreatedItem.m_bInitialized = true;
-	hScriptCreatedItem.m_bDoNotIterateStaticAttributes = true;
-	
-	if (hScriptCreatedItem.m_iEntityQuality == 0 && iSize > 0)
-	{
-		hScriptCreatedItem.m_iEntityQuality = 6;
-	}
-
-	CBaseEntity *added = SH_MCALL(pEnt, MHook_GiveNamedItem)(strWeaponClassname, 0, &hScriptCreatedItem, rcbot_force_generation.GetBool());
-
-	if (added)
-	{
-		if ( (iSlot == TF2_SLOT_MELEE) || (iSlot == TF2_SLOT_PRMRY) || (iSlot == TF2_SLOT_SCNDR) )
-			TF2_equipWeapon(pPlayer, added);
-		else
-			TF2_equipWearable(pPlayer, added);
-	}
-
-	return added != NULL;
-}
-
 void RCBotPluginMeta::Hook_PlayerRunCmd(CUserCmd *ucmd, IMoveHelper *moveHelper)
 {
 	static CBot *pBot;
-
 	edict_t *pEdict = servergameents->BaseEntityToEdict(META_IFACEPTR(CBaseEntity));
-
 	pBot = CBots::getBotPointer(pEdict);
-	
-	if ( pBot )
+
+	if (pBot)
 	{
 		static CBotCmd *cmd;
-		
 		cmd = pBot->getUserCMD();
 
 		// put the bot's commands into this move frame
@@ -543,13 +476,9 @@ void RCBotPluginMeta::Hook_PlayerRunCmd(CUserCmd *ucmd, IMoveHelper *moveHelper)
 		ucmd->weaponsubtype = cmd->weaponsubtype;
 		ucmd->tick_count = cmd->tick_count;
 		ucmd->command_number = cmd->command_number;
-
-		g_pLastBot = (CBotTF2*)pBot;
 	}
 
-//g_pSM->LogMessage(NULL, "H %i %i %f %f %f %f %i", ucmd->command_number, ucmd->tick_count, ucmd->viewangles.x, ucmd->viewangles.y, ucmd->viewangles.z, ucmd->forwardmove, ucmd->buttons); 
-
-RETURN_META(MRES_IGNORED); 
+	RETURN_META(MRES_IGNORED);
 }
 
 void RCBotPluginMeta::Hook_EquipWeapon(CBaseEntity *pWeapon)
@@ -567,7 +496,7 @@ void RCBotPluginMeta::Hook_EquipWearable(CEconWearable *pItem)
 	RETURN_META(MRES_IGNORED);
 }
 
-CBaseEntity *RCBotPluginMeta::Hook_GiveNamedItem( const char *name, int subtype, CEconItemView *cscript, bool b )
+CBaseEntity *RCBotPluginMeta::Hook_GiveNamedItem(const char *name, int subtype, CEconItemView *cscript, bool b)
 {
 	edict_t *pEdict = servergameents->BaseEntityToEdict(META_IFACEPTR(CBaseEntity));
 	CBot *pBot = NULL;
@@ -576,10 +505,10 @@ CBaseEntity *RCBotPluginMeta::Hook_GiveNamedItem( const char *name, int subtype,
 	{
 		((CBotTF2*)pBot)->PostGiveNamedItem(cscript);
 	}
-	
-	RETURN_META_VALUE(MRES_IGNORED, NULL); 
+
+	RETURN_META_VALUE(MRES_IGNORED, NULL);
 }
-/** 
+/**
  * Something like this is needed to register cvars/CON_COMMANDs.
  */
 class BaseAccessor : public IConCommandBaseAccessor
@@ -592,123 +521,13 @@ public:
 	}
 } s_BaseAccessor;
 
-// --- you're going to take over message begin
-bf_write *RCBotPluginMeta::Hook_MessageBegin(IRecipientFilter *filter, int msg_type)
-{
-	/*
-	bool bfound = false;
-
-	for (int i = 0; i < filter->GetRecipientCount(); i++)
-	{
-		if (filter->GetRecipientIndex(i) == 1)
-		{
-			bfound = true;
-			break;
-		}
-	}
-
-	if (bfound)
-	{
-		
-		int msgid = 0;
-		int imsgsize = 0;
-		char msgbuf[64];
-		bool bOK;
-
-		if (servergamedll->GetUserMessageInfo(msg_type, msgbuf, 63, imsgsize))
-		{
-			sprintf(current_msg_buffer, "MessageBegin() msg_type = %d name = %s\n", msg_type,msgbuf);
-		}
-
-	}
-	else
-		current_msg_buffer[0] = 0;
-	
-	current_msg = SH_CALL(engine, &IVEngineServer::UserMessageBegin)(filter, msg_type);
-
-	if (current_msg)
-	{
-		SH_ADD_HOOK_MEMFUNC(bf_write, WriteString, current_msg, this, &RCBotPluginMeta::Hook_WriteString, true);
-		SH_ADD_HOOK_MEMFUNC(bf_write, WriteByte, current_msg, this, &RCBotPluginMeta::Hook_WriteByte, true);
-		SH_ADD_HOOK_MEMFUNC(bf_write, WriteChar, current_msg, this, &RCBotPluginMeta::Hook_WriteChar, true);
-		SH_ADD_HOOK_MEMFUNC(bf_write, WriteShort, current_msg, this, &RCBotPluginMeta::Hook_WriteShort, true);
-		SH_ADD_HOOK_MEMFUNC(bf_write, WriteFloat, current_msg, this, &RCBotPluginMeta::Hook_WriteFloat, true);
-	}
-
-	//
-	RETURN_META_VALUE(MRES_SUPERCEDE, current_msg);*/
-
-	RETURN_META_VALUE(MRES_IGNORED, NULL);
-}
-
-void RCBotPluginMeta::Hook_WriteChar(int val)
-{
-	/*char tocat[64];
-
-	sprintf(tocat, "\nWriteChar(%c)", (char)val);
-	strcat(current_msg_buffer, tocat);*/
-}
-void RCBotPluginMeta::Hook_WriteShort(int val)
-{
-	/*char tocat[64];
-
-	sprintf(tocat, "\nWriteShort(%d)", val);
-	strcat(current_msg_buffer, tocat);*/
-}
-void RCBotPluginMeta::Hook_WriteByte(int val)
-{
-	/*char tocat[64];
-
-	sprintf(tocat, "\nWriteByte(%d)", val);
-	strcat(current_msg_buffer, tocat);*/
-}
-void RCBotPluginMeta::Hook_WriteFloat(float val)
-{
-	/*char tocat[64];
-
-	sprintf(tocat, "\nWriteFloat(%0.1f)", val);
-	strcat(current_msg_buffer, tocat);*/
-}
-
-bool RCBotPluginMeta::Hook_WriteString(const char *pStr)
-{
-	/*char *tocat = new char[strlen(pStr) + 16];
-	
-	sprintf(tocat, "\nWriteString(%s)", pStr);
-	strcat(current_msg_buffer, tocat);
-	
-	delete tocat;*/
-
-	RETURN_META_VALUE(MRES_IGNORED, false);
-}
-
-void RCBotPluginMeta::Hook_MessageEnd()
-{
-	// probe the current_msg m_pData
-	// deep copy the data because it might free itself later
-	//strncpy(current_msg_buffer, (char*)current_msg->m_pData, BUF_SIZ - 1);
-	//current_msg_buffer[BUF_SIZ - 1] = 0;
-	/*if (current_msg)
-	{
-		SH_REMOVE_HOOK_MEMFUNC(bf_write, WriteString, current_msg, this, &RCBotPluginMeta::Hook_WriteString, true);
-		SH_REMOVE_HOOK_MEMFUNC(bf_write, WriteByte, current_msg, this, &RCBotPluginMeta::Hook_WriteByte, true);
-		SH_REMOVE_HOOK_MEMFUNC(bf_write, WriteChar, current_msg, this, &RCBotPluginMeta::Hook_WriteChar, true);
-		SH_REMOVE_HOOK_MEMFUNC(bf_write, WriteShort, current_msg, this, &RCBotPluginMeta::Hook_WriteShort, true);
-		SH_REMOVE_HOOK_MEMFUNC(bf_write, WriteFloat, current_msg, this, &RCBotPluginMeta::Hook_WriteFloat, true);
-	}
-
-	current_msg_buffer[0] = 0;*/
-
-	RETURN_META(MRES_IGNORED);
-}
-
 bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
 	extern MTRand_int32 irand;
 
 	PLUGIN_SAVEVARS();
 
-	GET_V_IFACE_CURRENT(GetEngineFactory, enginetrace, IEngineTrace, INTERFACEVERSION_ENGINETRACE_SERVER);	
+	GET_V_IFACE_CURRENT(GetEngineFactory, enginetrace, IEngineTrace, INTERFACEVERSION_ENGINETRACE_SERVER);
 	GET_V_IFACE_CURRENT(GetEngineFactory, engine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
 	GET_V_IFACE_CURRENT(GetEngineFactory, gameevents, IGameEventManager2, INTERFACEVERSION_GAMEEVENTSMANAGER2);
 	GET_V_IFACE_CURRENT(GetEngineFactory, helpers, IServerPluginHelpers, INTERFACEVERSION_ISERVERPLUGINHELPERS);
@@ -716,7 +535,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 
 	GET_V_IFACE_ANY(GetEngineFactory, filesystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION)
 
-	GET_V_IFACE_ANY(GetServerFactory, servergameents, IServerGameEnts, INTERFACEVERSION_SERVERGAMEENTS);
+		GET_V_IFACE_ANY(GetServerFactory, servergameents, IServerGameEnts, INTERFACEVERSION_SERVERGAMEENTS);
 	GET_V_IFACE_ANY(GetServerFactory, server, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
 	GET_V_IFACE_ANY(GetServerFactory, gameclients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
 	GET_V_IFACE_ANY(GetServerFactory, playerinfomanager, IPlayerInfoManager, INTERFACEVERSION_PLAYERINFOMANAGER);
@@ -726,7 +545,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	GET_V_IFACE_ANY(GetServerFactory, servertools, IServerTools, VSERVERTOOLS_INTERFACE_VERSION);
 
 #ifndef __linux__
-	GET_V_IFACE_CURRENT(GetEngineFactory,debugoverlay, IVDebugOverlay, VDEBUG_OVERLAY_INTERFACE_VERSION);
+	GET_V_IFACE_CURRENT(GetEngineFactory, debugoverlay, IVDebugOverlay, VDEBUG_OVERLAY_INTERFACE_VERSION);
 #endif
 	GET_V_IFACE_ANY(GetServerFactory, servergamedll, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
 	GET_V_IFACE_ANY(GetServerFactory, gameclients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
@@ -745,7 +564,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 
 	/*SH_ADD_HOOK_MEMFUNC(IVEngineServer, UserMessageBegin, engine, this, &RCBotPluginMeta::Hook_MessageBegin, false);
 	SH_ADD_HOOK_MEMFUNC(IVEngineServer, MessageEnd, engine, this, &RCBotPluginMeta::Hook_MessageEnd, false);*/
-	
+
 	SH_ADD_HOOK_MEMFUNC(IServerGameDLL, LevelInit, server, this, &RCBotPluginMeta::Hook_LevelInit, true);
 	SH_ADD_HOOK_MEMFUNC(IServerGameDLL, ServerActivate, server, this, &RCBotPluginMeta::Hook_ServerActivate, true);
 	SH_ADD_HOOK_MEMFUNC(IServerGameDLL, GameFrame, server, this, &RCBotPluginMeta::Hook_GameFrame, true);
@@ -790,7 +609,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 
 #ifdef _WIN32
 
-	if (pKVL->getInt("givenameditem_win", &val))		
+	if (pKVL->getInt("givenameditem_win", &val))
 		rcbot_givenameditem_offset.SetValue(val);
 	if (pKVL->getInt("equipwearable_win", &val))
 		rcbot_equipwearable_offset.SetValue(val);
@@ -860,7 +679,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 		SH_MANUALHOOK_RECONFIGURE(MHook_EquipWearable, rcbot_equipwearable_offset.GetInt(), 0, 0);
 
 		SH_MANUALHOOK_RECONFIGURE(MHook_EquipWeapon, rcbot_weaponequip_offset.GetInt(), 0, 0);
-		
+
 		SH_MANUALHOOK_RECONFIGURE(MHook_RemovePlayerItem, rcbot_rmplayeritem_offset.GetInt(), 0, 0);
 	}
 
@@ -872,8 +691,8 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	//ConVar_Register( 0 );
 	//InitCVars( interfaceFactory ); // register any cvars we have defined
 
-	srand( (unsigned)time(NULL) );  // initialize the random seed
-	irand.seed( (unsigned)time(NULL) );
+	srand((unsigned)time(NULL));  // initialize the random seed
+	irand.seed((unsigned)time(NULL));
 
 
 	//eventListener2 = new CRCBotEventListener();
@@ -886,7 +705,7 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 	CWaypointTypes::setup();
 	CWaypoints::setupVisibility();
 
-	CBotConfigFile::reset();	
+	CBotConfigFile::reset();
 	CBotConfigFile::load();
 
 	CBotMenuList::setupMenus();
@@ -899,20 +718,15 @@ bool RCBotPluginMeta::Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxle
 
 	RCBOT2_Cvar_setup(g_pCVar);
 
-
-
 	return true;
 }
 
 
 bool RCBotPluginMeta::FireGameEvent(IGameEvent * pevent, bool bDontBroadcast)
 {
-	static char szKey[128];
-	static char szValue[128];
+	CBotEvents::executeEvent((void*)pevent, TYPE_IGAMEEVENT);
 
-	CBotEvents::executeEvent((void*)pevent,TYPE_IGAMEEVENT);	
-
-RETURN_META_VALUE(MRES_IGNORED, true);
+	RETURN_META_VALUE(MRES_IGNORED, true);
 }
 
 bool RCBotPluginMeta::Unload(char *error, size_t maxlen)
@@ -928,13 +742,7 @@ bool RCBotPluginMeta::Unload(char *error, size_t maxlen)
 	SH_REMOVE_HOOK_MEMFUNC(IServerGameClients, ClientSettingsChanged, gameclients, this, &RCBotPluginMeta::Hook_ClientSettingsChanged, false);
 	SH_REMOVE_HOOK_MEMFUNC(IServerGameClients, ClientConnect, gameclients, this, &RCBotPluginMeta::Hook_ClientConnect, false);
 	SH_REMOVE_HOOK_MEMFUNC(IServerGameClients, ClientCommand, gameclients, this, &RCBotPluginMeta::Hook_ClientCommand, false);
-	
-	//SH_REMOVE_MANUALHOOK(MHook_PlayerRunCmd, player_vtable, SH_STATIC(Hook_Function2), false);
 
-	// if another instance is running dont run through this
-	//if ( !bInitialised )
-	//	return;
-	
 	CBots::freeAllMemory();
 	CStrings::freeAllMemory();
 	CBotGlobals::freeMemory();
@@ -958,17 +766,17 @@ bool RCBotPluginMeta::Unload(char *error, size_t maxlen)
 	//	gameevents->RemoveListener(this);
 
 	// Reset Cheat Flag
-	if ( puppet_bot_cmd != NULL )
+	if (puppet_bot_cmd != NULL)
 	{
-		if ( !puppet_bot_cmd->IsFlagSet(FCVAR_CHEAT) )
+		if (!puppet_bot_cmd->IsFlagSet(FCVAR_CHEAT))
 		{
 			int *m_nFlags = (int*)((unsigned long)puppet_bot_cmd + BOT_CONVAR_FLAGS_OFFSET); // 20 is offset to flags
-			
+
 			*m_nFlags |= FCVAR_CHEAT;
 		}
 	}
 
-	ConVar_Unregister( );
+	ConVar_Unregister();
 
 	return true;
 }
@@ -980,8 +788,6 @@ void RCBotPluginMeta::OnVSPListening(IServerPluginCallbacks *iface)
 
 void RCBotPluginMeta::Hook_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
 {
-	META_LOG(g_PLAPI, "ServerActivate() called: edictCount = %d, clientMax = %d", edictCount, clientMax);
-
 	CAccessClients::load();
 
 	CBotGlobals::setClientMax(clientMax);
@@ -989,7 +795,7 @@ void RCBotPluginMeta::Hook_ServerActivate(edict_t *pEdictList, int edictCount, i
 
 void RCBotPluginMeta::AllPluginsLoaded()
 {
-	/* This is where we'd do stuff that relies on the mod or other plugins 
+	/* This is where we'd do stuff that relies on the mod or other plugins
 	 * being initialized (for example, cvars added and events registered).
 	 */
 }
@@ -1023,43 +829,43 @@ void RCBotPluginMeta::Hook_ClientCommand(edict_t *pEntity)
 	CClient *pClient = CClients::get(pEntity);
 
 	// is bot command?
-	if ( CBotGlobals::m_pCommands->isCommand(pcmd) )
-	{		
+	if (CBotGlobals::m_pCommands->isCommand(pcmd))
+	{
 		//eBotCommandResult iResult = CBotGlobals::m_pCommands->execute(pClient,engine->Cmd_Argv(1),engine->Cmd_Argv(2),engine->Cmd_Argv(3),engine->Cmd_Argv(4),engine->Cmd_Argv(5),engine->Cmd_Argv(6));
-		eBotCommandResult iResult = CBotGlobals::m_pCommands->execute(pClient,args.Arg(1),args.Arg(2),args.Arg(3),args.Arg(4),args.Arg(5),args.Arg(6));
+		eBotCommandResult iResult = CBotGlobals::m_pCommands->execute(pClient, args.Arg(1), args.Arg(2), args.Arg(3), args.Arg(4), args.Arg(5), args.Arg(6));
 
-		if ( iResult == COMMAND_ACCESSED )
+		if (iResult == COMMAND_ACCESSED)
 		{
 			// ok
 		}
-		else if ( iResult == COMMAND_REQUIRE_ACCESS )
+		else if (iResult == COMMAND_REQUIRE_ACCESS)
 		{
-			CBotGlobals::botMessage(pEntity,0,"You do not have access to this command");
+			CBotGlobals::botMessage(pEntity, 0, "You do not have access to this command");
 		}
-		else if ( iResult == COMMAND_NOT_FOUND )
+		else if (iResult == COMMAND_NOT_FOUND)
 		{
-			CBotGlobals::botMessage(pEntity,0,"bot command not found");	
+			CBotGlobals::botMessage(pEntity, 0, "bot command not found");
 		}
-		else if ( iResult == COMMAND_ERROR )
+		else if (iResult == COMMAND_ERROR)
 		{
-			CBotGlobals::botMessage(pEntity,0,"bot command returned an error");	
+			CBotGlobals::botMessage(pEntity, 0, "bot command returned an error");
 		}
 
 		RETURN_META(MRES_SUPERCEDE);
 	}
-	else if ( strncmp(pcmd,"menuselect",10) == 0 ) // menu command
+	else if (strncmp(pcmd, "menuselect", 10) == 0) // menu command
 	{
-		if ( pClient->isUsingMenu() )
+		if (pClient->isUsingMenu())
 		{
 			int iCommand = atoi(args.Arg(1));
 
 			// format is 1.2.3.4.5.6.7.8.9.0
-			if ( iCommand == 0 )
+			if (iCommand == 0)
 				iCommand = 9;
 			else
-				iCommand --;
+				iCommand--;
 
-			pClient->getCurrentMenu()->selectedMenu(pClient,iCommand);
+			pClient->getCurrentMenu()->selectedMenu(pClient, iCommand);
 		}
 	}
 
@@ -1067,9 +873,9 @@ void RCBotPluginMeta::Hook_ClientCommand(edict_t *pEntity)
 	pMod = CBotGlobals::getCurrentMod();
 
 	// capture some client commands e.g. voice commands
-	pMod->clientCommand(pEntity,args.ArgC(),pcmd,args.Arg(1),args.Arg(2));
+	pMod->clientCommand(pEntity, args.ArgC(), pcmd, args.Arg(1), args.Arg(2));
 
-	RETURN_META(MRES_IGNORED); 
+	RETURN_META(MRES_IGNORED);
 }
 
 void RCBotPluginMeta::Hook_ClientSettingsChanged(edict_t *pEdict)
@@ -1078,13 +884,11 @@ void RCBotPluginMeta::Hook_ClientSettingsChanged(edict_t *pEdict)
 }
 
 bool RCBotPluginMeta::Hook_ClientConnect(edict_t *pEntity,
-									const char *pszName,
-									const char *pszAddress,
-									char *reject,
-									int maxrejectlen)
+	const char *pszName,
+	const char *pszAddress,
+	char *reject,
+	int maxrejectlen)
 {
-	META_LOG(g_PLAPI, "Hook_ClientConnect(%d, \"%s\", \"%s\")", IndexOfEdict(pEntity), pszName, pszAddress);
-
 	CClients::init(pEntity);
 
 	return true;
@@ -1097,17 +901,17 @@ void RCBotPluginMeta::Hook_ClientPutInServer(edict_t *pEntity, char const *playe
 
 	CClient *pClient = CClients::clientConnected(pEntity);
 
-	if ( CBots::controlBots() )
-		is_Rcbot = CBots::handlePlayerJoin(pEntity,playername);
-	
-	if ( !is_Rcbot && pClient )
-	{	
-		if ( !engine->IsDedicatedServer() )
+	if (CBots::controlBots())
+		is_Rcbot = CBots::handlePlayerJoin(pEntity, playername);
+
+	if (!is_Rcbot && pClient)
+	{
+		if (!engine->IsDedicatedServer())
 		{
-			if ( CClients::noListenServerClient() )
+			if (CClients::noListenServerClient())
 			{
 				// give listenserver client all access to bot commands
-				CClients::setListenServerClient(pClient);		
+				CClients::setListenServerClient(pClient);
 				pClient->setAccessLevel(CMD_ACCESS_ALL);
 				pClient->resetMenuCommands();
 			}
@@ -1118,7 +922,7 @@ void RCBotPluginMeta::Hook_ClientPutInServer(edict_t *pEntity, char const *playe
 
 	pMod->playerSpawned(pEntity);
 
-	if ( pEnt )
+	if (pEnt)
 	{
 		if (CBots::controlBots())
 			SH_ADD_MANUALHOOK_MEMFUNC(MHook_PlayerRunCmd, pEnt, this, &RCBotPluginMeta::Hook_PlayerRunCmd, false);
@@ -1139,7 +943,7 @@ void RCBotPluginMeta::Hook_ClientDisconnect(edict_t *pEntity)
 {
 	CBaseEntity *pEnt = servergameents->EdictToBaseEntity(pEntity);
 
-	if ( pEnt )
+	if (pEnt)
 	{
 		CBotMod *pMod = CBotGlobals::getCurrentMod();
 
@@ -1173,15 +977,15 @@ void RCBotPluginMeta::Hook_GameFrame(bool simulating)
 
 	static CBotMod *currentmod;
 
-	if ( simulating && CBotGlobals::IsMapRunning() )
+	if (simulating && CBotGlobals::IsMapRunning())
 	{
 		CBots::botThink();
 		//if ( !CBots::controlBots() )
-			//gameclients->PostClientMessagesSent();
+		//gameclients->PostClientMessagesSent();
 		CBots::handleAutomaticControl();
 		CClients::clientThink();
 
-		if ( CWaypoints::getVisiblity()->needToWorkVisibility() )
+		if (CWaypoints::getVisiblity()->needToWorkVisibility())
 		{
 			CWaypoints::getVisiblity()->workVisibility();
 		}
@@ -1203,16 +1007,12 @@ void RCBotPluginMeta::Hook_GameFrame(bool simulating)
 }
 
 bool RCBotPluginMeta::Hook_LevelInit(const char *pMapName,
-								char const *pMapEntities,
-								char const *pOldLevel,
-								char const *pLandmarkName,
-								bool loadGame,
-								bool background)
+	char const *pMapEntities,
+	char const *pOldLevel,
+	char const *pLandmarkName,
+	bool loadGame,
+	bool background)
 {
-	META_LOG(g_PLAPI, "Hook_LevelInit(%s)", pMapName);
-
-		//CClients::initall();
-	// Must set this
 	CBotGlobals::setMapName(pMapName);
 
 	CWaypoints::precacheWaypointTexture();
@@ -1226,8 +1026,8 @@ bool RCBotPluginMeta::Hook_LevelInit(const char *pMapName,
 
 	CBotGlobals::setMapRunning(true);
 	CBotConfigFile::reset();
-	
-	if ( mp_teamplay )
+
+	if (mp_teamplay)
 		CBotGlobals::setTeamplay(mp_teamplay->GetBool());
 	else
 		CBotGlobals::setTeamplay(false);
@@ -1237,8 +1037,8 @@ bool RCBotPluginMeta::Hook_LevelInit(const char *pMapName,
 	CBots::mapInit();
 
 	CBotMod *pMod = CBotGlobals::getCurrentMod();
-	
-	if ( pMod )
+
+	if (pMod)
 		pMod->mapInit();
 
 	CBotSquads::FreeMemory();
@@ -1267,7 +1067,7 @@ void RCBotPluginMeta::Hook_LevelShutdown()
 	CClients::initall();
 	CWaypointDistances::save();
 
-	CBots::freeMapMemory();	
+	CBots::freeMapMemory();
 	CWaypoints::init();
 
 	CBotGlobals::setMapRunning(false);

@@ -6,7 +6,7 @@
  * ======================================================
  *
  * This software is provided 'as-is', without any express or implied warranty.
- * In no event will the authors be held liable for any damages arising from 
+ * In no event will the authors be held liable for any damages arising from
  * the use of this software.
  *
  * This sample plugin is public domain.
@@ -68,10 +68,11 @@ public:
 	bool Pause(char *error, size_t maxlen);
 	bool Unpause(char *error, size_t maxlen);
 	void AllPluginsLoaded();
+
 public: //IMetamodListener stuff
 	void OnVSPListening(IServerPluginCallbacks *iface);
-public: //hooks
 
+public: //hooks
 	void Hook_ServerActivate(edict_t *pEdictList, int edictCount, int clientMax);
 	bool Hook_LevelInit(const char *pMapName, char const *pMapEntities, char const *pOldLevel, char const *pLandmarkName, bool loadGame, bool background);
 	void Hook_GameFrame(bool simulating);
@@ -82,30 +83,22 @@ public: //hooks
 	void Hook_SetCommandClient(int index);
 	void Hook_ClientSettingsChanged(edict_t *pEdict);
 	//Called for a game event.  Same definition as server plugins???
-	bool FireGameEvent( IGameEvent *pevent, bool bDontBroadcast );
+	bool FireGameEvent(IGameEvent *pevent, bool bDontBroadcast);
 	void Hook_PlayerRunCmd(CUserCmd *ucmd, IMoveHelper *moveHelper);
 	CBaseEntity *Hook_GiveNamedItem(const char *name, int subtype, CEconItemView *cscript, bool b);
 	void Hook_EquipWearable(CEconWearable *pItem);
 	void Hook_EquipWeapon(CBaseEntity *pWeapon);
 	void Hook_RemovePlayerItem(CBaseEntity *pWeapon);
 	bool Hook_ClientConnect(edict_t *pEntity, const char *pszName, const char *pszAddress, char *reject, int maxrejectlen);
-	bf_write *Hook_MessageBegin(IRecipientFilter *filter, int msg_type);
-	void Hook_MessageEnd();
 
-	void Hook_WriteChar(int val);
-	void Hook_WriteShort(int val);
-	void Hook_WriteByte(int val);
-	void Hook_WriteFloat(float val);
-	bool Hook_WriteString(const char *pStr);
-
-	static CBaseEntity *TF2_getPlayerWeaponSlot(edict_t *pPlayer, int iSlot);
-	static void TF2_removeWearable(edict_t *pPlayer, CBaseEntity *pWearable);
-	static void TF2_removePlayerItem(edict_t *pPlayer, CBaseEntity *pItem);
+	static CBaseEntity *TF2_GetPlayerWeaponSlot(edict_t *pPlayer, int iSlot);
+	static void TF2_RemoveWearable(edict_t *pPlayer, CBaseEntity *pWearable);
+	static void TF2_RemovePlayerItem(edict_t *pPlayer, CBaseEntity *pItem);
 	static void TF2_RemoveWeaponSlot(edict_t *pPlayer, int iSlot);
-	static void TF2_equipWeapon(edict_t *pPlayer, CBaseEntity *pWeapon);
-	static bool givePlayerLoadOut(edict_t *pPlayer, CTF2Loadout *pLoadout, int iSlot, void *pVTable, void *pVTable_Attributes);
-	static void giveRandomLoadout(edict_t *pPlayer, int iClass, int iSlot, void *pVTable, void *pVTable_Attributes);
-	static void TF2_equipWearable(edict_t *pPlayer, CBaseEntity *pWearable);
+	static void TF2_EquipWeapon(edict_t *pPlayer, CBaseEntity *pWeapon);
+	static bool TF2_GivePlayerLoadOut(edict_t *pPlayer, CTF2Loadout *pLoadout, int iSlot, void *pVTable, void *pVTable_Attributes);
+	static void TF2_GiveRandomLoadout(edict_t *pPlayer, int iClass, int iSlot, void *pVTable, void *pVTable_Attributes);
+	static void TF2_EquipWearable(edict_t *pPlayer, CBaseEntity *pWearable);
 	static bool TF2_ClearAttributeCache(edict_t *pEdict);
 	static void HudTextMessage(edict_t *pEntity, const char *szMessage);
 #if SOURCE_ENGINE >= SE_ORANGEBOX
